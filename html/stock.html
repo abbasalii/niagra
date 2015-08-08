@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Niagra Sports</title>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="js/Socket.js"></script>
+	<script type="text/javascript" src="js/stock.js"></script>
+	<style type="text/css">
+		#stockTable{
+
+		}
+		th,td{
+			border: 1px solid black;
+		}
+		.edit-stock-btn{
+
+		}
+	</style>
+</head>
+<body>
+	<div id="searchStockDiv">
+		<input id="searchStockBar" type="text" placeholder="Search for Stock"/>
+		<select id="stockCategorySelect"></select>
+		<input id="searchStockBtn" type="button" value="Search"/>
+	</div>
+	<div id="stockInsertDiv">
+		<input id="newStockName" type="text" placeholder="Name"/>
+		<input id="newStockCategory" type="text" placeholder="Category" list="categories"/>
+		<datalist id="categories"></datalist>
+		<input id="newStockPrice" type="number" placeholder="Price"/>
+		<input id="newStockQty" type="number" min="1" placeholder="Quantity"/>
+		<input id="createStockBtn" type="button" value="Insert"/>
+	</div>
+	<div id="stockDataDiv"></div>
+</body>
+</html>

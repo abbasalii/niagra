@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Niagra Sports</title>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="js/Socket.js"></script>
+	<script type="text/javascript" src="js/trans.js"></script>
+	<style type="text/css">
+		th,td{
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+	<div id="searchTransDiv">
+		<select id="transCitySelect"></select>
+		<input id="searchTransBar" type="text" placeholder="Search" list="accList"/>
+		<input id="beginTransDate" type="date"/>
+		<input id="endTransDate" type="date"/>
+		<input id="minTransAmount" type="number" min="0" placeholder="Minimum Amount"/>
+		<input id="maxTransAmount" type="number" min="0" placeholder="Maximum Amount"/>
+		<input id="searchTransBtn" type="button" value="Search"/>
+	</div>
+	<div id="newTransDiv">
+		<select id="newTransAcc"></select>
+		<input id="newTransDate" type="date"/>
+		<select id="newTransType">
+			<option value="credit">Credit</option>
+			<option value="debit">Debit</option>
+		</select>
+		<input id="newTransAmount" type="number" min="0" placeholder="Amount"/>
+		<input id="newTransDetail" type="text" placeholder="Description"/>
+		<input id="newTransBtn" type="button" value="Proceed"/>
+	</div>
+	<div id="transDataDiv"></div>
+	<datalist id="cityList"></datalist>
+	<datalist id="accList"></datalist>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Niagra Sports</title>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="js/Socket.js"></script>
+	<script type="text/javascript" src="js/ledger.js"></script>
+	<style type="text/css">
+		th,td{
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+	<div id="searchLedgerDiv">
+		<input id="searchLedgerBar" type="text" placeholder="Search"/>
+		<select id="ledgerCitySelect"></select>
+		<input id="searchLedgerBtn" type="button" value="Search"/>
+	</div>
+	<div id="newAccDiv">
+		<input id="newAccTitle" type="text" placeholder="Title"/>
+		<input id="newAccCity" type="text" placeholder="City" list="cityList"/>
+		<input id="newAccPtcl" type="text" placeholder="Ptcl"/>
+		<input id="newAccCell" type="text" placeholder="Mobile"/>
+		<input id="newAccExt" type="text" placeholder="Detail"/>
+		<input id="newAccBal" type="number" placeholder="Balance"/>
+		<input id="newAccDate" type="date" />
+		<input id="newAccBtn" type="button" value="Insert"/>
+	</div>
+	<datalist id="cityList"></datalist>
+	<div id="ledgerDataDiv"></div>
+	<div id="ledgerDetailDiv"></div>
+</body>
+</html>
