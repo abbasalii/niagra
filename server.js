@@ -27,6 +27,8 @@ NEW_TRANSACTION = 'new_transaction';
 TRANSACTION_COMPLETE = 'transaction_complete';
 GET_ITEM_LIST = 'get_item_list';
 ITEM_LIST_RESPONSE = 'item_list_response';
+NEW_BILL = 'new_bill';
+NEW_BILL_SUCCESS = 'new_bill_success';
 
 
 ACC_REQ_TYPE_TRANS = 1;
@@ -561,7 +563,7 @@ var makeTransaction = function(data,socket){
 			}
 			else{
 				// console.log("Balance: "+rows[0].BALANCE);
-				var balance = parseInt(rows[0].BALANCE) + (data.AMOUNT);
+				var balance = parseInt(rows[0].BALANCE) + (data.AMOUNT) - data.OTHER;
 				connection.query('UPDATE ACCOUNT SET BALANCE=? WHERE ID=?',
 				[balance,data.ACCOUNT_ID],
 				function(err,rows,fields){
@@ -571,8 +573,17 @@ var makeTransaction = function(data,socket){
 					}
 					else{
 						console.log("Balance successfully updated");
-						connection.query('INSERT INTO TRANSACTION (T_DATE,AMOUNT,DESCRIPTION,ACCOUNT_ID) VALUES (?,?,?,?)',
-						[data.T_DATE,data.AMOUNT,data.DESCRIPTION,data.ACCOUNT_ID],
+						var query = 'INSERT INTO TRANSACTION (T_DATE,AMOUNT,DESCRIPTION,ACCOUNT_ID) VALUES (?,?,?,?)';
+						var values = [data.T_DATE,data.AMOUNT,data.DESCRIPTION,data.ACCOUNT_ID];
+						if(data.OTHER>0){
+							query += ',(?,?,?,?)';
+							values.push(data.T_DATE);
+							values.push(-data.OTHER);
+							values.push(data.BILL);
+							values.push(data.ACCOUNT_ID);
+						}
+						connection.query(query,
+						values,
 						function(err,rows,fields){
 							if(err){
 								console.log("Failed to insert a new transaction");
@@ -621,6 +632,65 @@ var sendItemList = function(socket,type){
 				console.log("Sending list of items");
 				socket.emit(ITEM_LIST_RESPONSE,JSON.stringify(rows));
 				return;
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var createNewBill = function(data,socket){
+
+	console.log(data.ACCOUNT_ID);
+	console.log(data.AMOUNT_DUE);
+	console.log(data.DISCOUNT);
+	console.log(data.AMOUNT_PAID);
+	var sales = data.SALES;
+	for(var i=0; i<sales.length; i++)
+		console.log(sales[i].ITEM_ID + "\t" + sales[i].COST + "\t" + sales[i].QUANTITY);
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		connection.query('INSERT INTO BILL (B_DATE,ACCOUNT_ID,AMOUNT_DUE,DISCOUNT,AMOUNT_PAID) VALUES (NOW(),?,?,?,?)',
+		[data.ACCOUNT_ID,data.AMOUNT_DUE,data.DISCOUNT,data.AMOUNT_PAID],
+		function(err,rows,fields){
+			if(err){
+				console.log("Failed to create new bill");
+				connection.release();
+			}
+			else{
+				var b_id = rows.insertId;
+				console.log("New bill successfully created with ID: "+rows.insertId);
+
+				var query = 'INSERT INTO SALE (ITEM_ID,COST,QUANTITY,BILL_ID) VALUES (?,?,?,?)';
+				var values = [sales[0].ITEM_ID,sales[0].COST,sales[0].QUANTITY,rows.insertId];
+				for(var i=1; i<sales.length; i++){
+					query += ',(?,?,?,?)';
+					values.push(sales[i].ITEM_ID);
+					values.push(sales[i].COST);
+					values.push(sales[i].QUANTITY);
+					values.push(rows.insertId);
+				}
+				connection.query(query, values,
+				function(err,rows,fields){
+					if(err){
+						console.log("Failed to insert sales");
+					}
+					else{
+						console.log("Sales successfully inserted");
+						socket.emit(NEW_BILL_SUCCESS,{id:b_id});
+					}
+					connection.release();
+				});
 			}
 		});
 
@@ -707,6 +777,11 @@ io.sockets.on('connection', function (socket) {
 	socket.on(GET_ITEM_LIST,function(data){
 		console.log('Client has requested for list of items');
 		sendItemList(socket,data.type);
+	});
+
+	socket.on(NEW_BILL,function(data){
+		console.log('Client has sent new bill details');
+		createNewBill(JSON.parse(data),socket);
 	});
 });
 

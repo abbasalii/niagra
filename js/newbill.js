@@ -2,10 +2,15 @@
 ACC_REQ_TYPE_BILL = 2;
 ITEM_REQ_TYPE_BILL = 3;
 
+TRANS_DET_MIN_LEN = 5;
+TRANS_DET_MAX_LEN = 100;
+
 NewBill = new function(){
 
 	var accounts = null;
 	var items = null;
+	var tree = {};
+	var sale = [];
 
 	this.init = function(){
 
@@ -36,6 +41,7 @@ NewBill = new function(){
 		$("#itemList").html("");
 		for(var i=0; i<items.length; i++){
 			$("#itemList").append("<option>"+items[i].NAME+"</option>");
+			tree[items[i].NAME] = i;
 		}
 	}
 
@@ -99,18 +105,16 @@ NewBill = new function(){
 		$("#billItemTab").find('input.item-name').eq(ind).change(function(){
 
 			$("#billItemTab td.item-amount").eq(ind).html("");
-
 			var it = $("#billItemTab input.item-name").eq(ind).val().trim().toUpperCase();
-			for(var i=0; i<items.length && it.length>0; i++){
-				if(items[i].NAME==it){
-					$("#billItemTab input.item-price").eq(ind).val(items[i].PRICE);
-					$("#billItemTab input.item-quantity").eq(ind).val(1);
-					$("#billItemTab td.item-amount").eq(ind).html(items[i].PRICE);
-					break;
-				}
+			$("#billItemTab input.item-name").eq(ind).val(it);
+			if(tree[it]!=undefined){
+				$("#billItemTab input.item-price").eq(ind).val(items[tree[it]].PRICE);
+				// $("#billItemTab input.item-quantity").eq(ind).val(1);
+				// $("#billItemTab td.item-amount").eq(ind).html(items[tree[it]].PRICE);
 			}
 			NewBill.calculateTotal();
 		});
+
 		$("#billItemTab").find('input.item-price').eq(ind).unbind("focus");
 		$("#billItemTab").find('input.item-price').eq(ind).change(function(){
 
@@ -167,6 +171,109 @@ NewBill = new function(){
 	this.finishBill = function(){
 
 		console.log("Finish Bill button clicked");
+		var acc_id = parseInt($("#newBillAccSel").val());
+		if(isNaN(acc_id) || acc_id<0){
+			console.log("Select a valid account");
+			return;
+		}
+
+		var am_due = parseInt($("#amountDueInput").val());
+		if(isNaN(am_due) || am_due<=0){
+			console.log("Due Amount should be greater than zero");
+			return;
+		}
+
+		var discount = parseInt($("#dicountInput").val());
+		if(isNaN(discount)){
+			console.log("Disount is set to zero");
+			discount = 0;
+		}
+
+		var am_paid = parseInt($("#amountPaidInput").val());
+		if(isNaN(am_paid) || am_paid<0){
+			console.log("Amount Paid should be greater than or equal to zero");
+			return;
+		}
+
+		var pay_det = $("#paymentDetailsInput").val();
+		var l = pay_det.length;
+		if(am_paid>0 && (l<TRANS_DET_MIN_LEN || l>TRANS_DET_MAX_LEN)){
+			console.log("Specify payment detail");
+			return;
+		}
+
+		if(NewBill.validateTableData()){
+
+			console.log("All okay (y)");
+			var data = {
+				ACCOUNT_ID: 	acc_id,
+				AMOUNT_DUE: 	am_due,
+				DISCOUNT: 		discount,
+				AMOUNT_PAID: 	am_paid,
+				SALES: 			sale
+			};
+
+			Socket.createNewBill(data);
+		}
+	}
+
+	this.validateTableData = function(){
+
+		console.log("Validating table data...");
+		var l = $("#billItemTab tr").length-2;
+		var isValid = l>0?true:false;
+		sale = [];
+		$("#billItemTab tr:gt(0):lt("+l+")").each(function(){
+
+			var s_it = {};
+			var it = $(this).find("input.item-name").eq(0).val();
+			if(tree[it]==undefined){
+				$(this).find("input.item-name").eq(0).focus();
+				isValid = false;
+				return isValid;
+			}
+			else{
+				s_it['ITEM_ID'] = items[tree[it]].ID;
+			}
+
+			var price = parseInt($(this).find("input.item-price").eq(0).val());
+			if(isNaN(price) || price<=0){
+				$(this).find("input.item-price").eq(0).focus();
+				isValid = false;
+				return isValid;
+			}
+			else{
+				s_it['COST'] = price;
+			}
+
+			var qty = parseInt($(this).find("input.item-quantity").eq(0).val());
+			if(isNaN(qty) || qty<=0){
+				$(this).find("input.item-quantity").eq(0).focus();
+				isValid = false;
+				return isValid;
+			}
+			else{
+				s_it['QUANTITY'] = qty;
+			}
+
+			sale.push(s_it);
+		});
+
+		return isValid;
+	}
+
+	this.proceedToTransaction = function(id){
+
+		console.log("Bill # "+id);
+		var acc_id = $("#newBillAccSel").val();
+		var am_due = parseInt($("#amountDueInput").val());
+		var discount = parseInt($("#dicountInput").val());
+		if(isNaN(discount))
+			discount = 0;
+		var d = am_due - discount;
+		var c = parseInt($("#amountPaidInput").val());
+		var t = $("#paymentDetailsInput").val();
+		location.href = "/trans.html?a="+acc_id+"&d="+d+"&c="+c+"&b="+id+"&t="+t;
 	}
 }
 
@@ -179,3 +286,10 @@ $(function() {
 
 	$("#newBillFinBtn").click(NewBill.finishBill);
 });
+
+
+
+
+
+
+

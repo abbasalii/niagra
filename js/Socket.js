@@ -29,6 +29,8 @@ NEW_TRANSACTION = 'new_transaction';
 TRANSACTION_COMPLETE = 'transaction_complete';
 GET_ITEM_LIST = 'get_item_list';
 ITEM_LIST_RESPONSE = 'item_list_response';
+NEW_BILL = 'new_bill';
+NEW_BILL_SUCCESS = 'new_bill_success';
 
 
 Socket = new function(){
@@ -124,6 +126,11 @@ Socket = new function(){
 			console.log("Received list of items");
 			NewBill.setItemList(JSON.parse(data));
 		});
+
+		socket.on(NEW_BILL_SUCCESS,function(data){
+			console.log("New Bill successfully created");
+			NewBill.proceedToTransaction(data.id);
+		});
 	}
 
 	this.getState = function(){
@@ -188,6 +195,11 @@ Socket = new function(){
 	this.requestAllItems = function(_type){
 		console.log("Requesting list of items");
 		socket.emit(GET_ITEM_LIST,{type:_type});
+	}
+
+	this.createNewBill = function(data){
+		console.log("Sending new bill details");
+		socket.emit(NEW_BILL,JSON.stringify(data));
 	}
 }
 

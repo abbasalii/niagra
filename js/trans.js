@@ -10,6 +10,7 @@ Trans = new function(){
 	var cities = null;
 	var transs = null;
 	var udate = new Date();
+	var auto = {};
 
 	this.init = function(){
 		console.log("Initializing transactions...");
@@ -275,23 +276,83 @@ Trans = new function(){
 			return;
 		}
 
-		if(t_type=='credit')
-			amount = -amount;
-
 		var detail = $("#newTransDetail").val().trim();
 		if(detail.length<TRANS_DET_MIN_LEN || detail.length>TRANS_DET_MAX_LEN){
 			console.log("Valid detail length is 5-100 characters");
 			return;
 		}
 
+		var other = parseInt($("#newTransAmount2").val());
+		var bill = '';
+		if(t_type=='both'){
+			if(isNaN(other) || other<=0){
+				console.log("Invalid Credit amount");
+				return;
+			}
+
+			bill = detail;
+			if(auto['BILL']!=undefined){
+				detail = "Bill No. " + auto['BILL'];
+			}
+		}
+		else
+			other = 0;
+
+		if(t_type=='credit')
+			amount = -amount;
+
+		
+
 		transObj = {
 			ACCOUNT_ID: acc_id,
 			T_DATE: t_date,
 			AMOUNT: amount,
+			OTHER: other,
+			BILL: bill,
 			DESCRIPTION: detail
 		};
 
 		Socket.makeTransaction(transObj);
+	}
+
+	this.displayFields = function(){
+
+		console.log("Transaction type changed");
+		var t_type = $("#newTransType").val();
+		if(t_type=='both'){
+			$("#newTransAmount").attr("placeholder","Debit");
+			$("#newTransAmount2").show();
+		}
+		else{
+			$("#newTransAmount2").hide();
+			if(t_type=='credit'){
+				$("#newTransAmount").attr("placeholder","Credit");
+			}
+			else{
+				$("#newTransAmount").attr("placeholder","Debit");
+			}
+		}
+	}
+
+	this.setAuto = function(_auto){
+		auto = _auto;
+	}
+
+	this.autoFill = function(){
+
+		if(accounts==null){
+			setTimeout(Trans.autoFill,100);
+			return
+		}
+
+		$("#newTransAcc").val(auto['ACCOUNT_ID']);
+		$("#newTransAmount").val(auto['DEBIT']);
+		if(auto['CREDIT']>0){
+			$("#newTransType").val('both');
+			$("#newTransAmount2").val(auto['CREDIT']);
+			Trans.displayFields();
+		}
+		$("#newTransDetail").val(auto['DETAIL']);
 	}
 }
 
@@ -302,7 +363,7 @@ $(function() {
 
 	function GetURLParameter(sParam)
 	{
-	    var sPageURL = window.location.search.substring(1);
+	    var sPageURL = decodeURI(window.location.search.substring(1));
 	    var sURLVariables = sPageURL.split('&');
 	    for (var i = 0; i < sURLVariables.length; i++)
 	    {
@@ -342,8 +403,34 @@ $(function() {
 		Trans.createNewTransaction();
 	});
 
+	$("#newTransType").change(Trans.displayFields);
+
 	var acc_id = GetURLParameter('id');
 	if(acc_id!=undefined){
 		Trans.searchAccountID(acc_id);
+	}
+
+	var a = GetURLParameter('a');
+	if(a!=undefined){
+		var d = GetURLParameter('d');
+		var c = GetURLParameter('c');
+		var b = GetURLParameter('b');
+		var t = GetURLParameter('t');
+
+		var auto = {};
+		auto['ACCOUNT_ID'] = a;
+		auto['DEBIT'] = parseInt(d);
+		auto['CREDIT'] = parseInt(c);
+		auto['BILL'] = b;
+		auto['DETAIL'] = t;
+		Trans.setAuto(auto);
+
+		console.log("Account ID: "+a);
+		console.log("Debit: "+d);
+		console.log("Credit: "+c);
+		console.log("Bill: "+b);
+		console.log("Detail: "+t);
+
+		Trans.autoFill();
 	}
 });
