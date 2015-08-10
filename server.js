@@ -33,6 +33,7 @@ BILL_SEARCH = 'bill_search';
 BILL_RESPONSE = 'bill_response';
 BILL_DETAILS = 'bill_details';
 BILL_DETAIL_RESPONSE = 'bill_detail_response';
+BILL_INFO = 'bill_info';
 
 
 ACC_REQ_TYPE_TRANS = 1;
@@ -51,13 +52,30 @@ var handler = function(req, res){
 		// 	return res.end();
 		// }
 
-		fs.readFile(__dirname + action,
+		fs.readFile(__dirname + '/js' + action,
 			function (err, data) {
 				if (err) {
 					res.writeHead(500);
 					return res.end('Error loading ' + action);
 				}
 				res.writeHead(200, {'Content-Type': 'application/javascript'});//, 'Last-Modified': last, 'Cache-Control':'max-age=86400'});
+				res.end(data);
+			}
+		);
+	}
+	else if(action.indexOf(".css")>-1){  	
+  	// if(reqModDate==last){
+  	// 	res.writeHead(304, {'Content-Type': 'text/css', 'Last-Modified': last, 'Cache-Control':'max-age=86400'});
+  	// 	return res.end();
+  	// }
+
+		fs.readFile(__dirname + '/css' + action,
+			function (err, data) {
+				if (err) {
+					res.writeHead(500);
+					return res.end('Error loading '+action);
+				}
+				res.writeHead(200, {'Content-Type': 'text/css'});//, 'Last-Modified': last, 'Cache-Control':'max-age=86400'});
 				res.end(data);
 			}
 		);
@@ -766,7 +784,44 @@ var searchBillRecords = function(data,socket){
 	});
 }
 
+var getBillInfo = function(id,socket){
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		var query = 'SELECT ACCOUNT.TITLE, BILL.B_DATE, BILL.AMOUNT_DUE, BILL.DISCOUNT, BILL.AMOUNT_PAID from BILL'
+					+ ' INNER JOIN ACCOUNT'
+					+ ' ON BILL.ACCOUNT_ID=ACCOUNT.ID'
+					+ ' WHERE BILL.ID=?';
+		connection.query(query,[id], function(err, rows, fields) {
+			connection.release();
+			if (err){
+				socket.emit(QUERY_ERROR);
+				console.log("Failed to fetch bill info");
+				return;
+			}
+			else{
+				console.log("Sending bill info");
+				socket.emit(BILL_INFO,JSON.stringify(rows));
+				return;
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
 var getBillDetails = function(id,socket){
+
+	getBillInfo(id,socket);
 
 	pool.getConnection(function(err,connection){
 		if (err) {

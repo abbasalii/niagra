@@ -35,6 +35,7 @@ BILL_SEARCH = 'bill_search';
 BILL_RESPONSE = 'bill_response';
 BILL_DETAILS = 'bill_details';
 BILL_DETAIL_RESPONSE = 'bill_detail_response';
+BILL_INFO = 'bill_info';
 
 
 Socket = new function(){
@@ -148,6 +149,11 @@ Socket = new function(){
 		socket.on(BILL_DETAIL_RESPONSE,function(data){
 			console.log("Received bill details");
 			Biller.setBillDetails(JSON.parse(data));
+		});
+
+		socket.on(BILL_INFO,function(data){
+			console.log("Received bill info");
+			Biller.setBillInfo(JSON.parse(data));
 		});
 	}
 

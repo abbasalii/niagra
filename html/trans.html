@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Niagra Sports</title>
-	<script type="text/javascript" src="js/jquery.js"></script>
+	<title>Niagra Sports - Transaction Panel</title>
+	<script type="text/javascript" src="jquery.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="js/Socket.js"></script>
-	<script type="text/javascript" src="js/trans.js"></script>
+	<script type="text/javascript" src="Socket.js"></script>
+	<script type="text/javascript" src="trans.js"></script>
+	<link rel="stylesheet" type="text/css" href="default.css">
 	<style type="text/css">
-		th,td{
-			border: 1px solid black;
-		}
 		.extra-amount-field{
+			display: none;
+		}
+		.extra-detail-field{
 			display: none;
 		}
 	</style>
@@ -35,8 +36,9 @@
 			<option value="both">Both</option>
 		</select>
 		<input id="newTransAmount" type="number" min="0" placeholder="Debit"/>
-		<input id="newTransAmount2" class="extra-amount-field" type="number" min="0" placeholder="Credit"/>
 		<input id="newTransDetail" type="text" placeholder="Description"/>
+		<input id="newTransAmount2" class="extra-amount-field" type="number" min="0" placeholder="Credit"/>
+		<input id="newTransDetail2" class="extra-detail-field" type="text" placeholder="Description"/>
 		<input id="newTransBtn" type="button" value="Proceed"/>
 	</div>
 	<div id="transDataDiv"></div>

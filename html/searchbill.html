@@ -3,15 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Niagra Sports - Search Bill Record</title>
-	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="jquery.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="js/Socket.js"></script>
-	<script type="text/javascript" src="js/searchbill.js"></script>
-	<script type="text/javascript" src="js/Format.js"></script>
+	<script type="text/javascript" src="Socket.js"></script>
+	<script type="text/javascript" src="searchbill.js"></script>
+	<script type="text/javascript" src="Format.js"></script>
+	<link rel="stylesheet" type="text/css" href="default.css">
 	<style type="text/css">
-		th,td{
-			border: 1px solid black;
-		}
 		.bill-detail-btn{
 
 		}
@@ -19,14 +17,19 @@
 </head>
 <body>
 	<div id="billSearchDiv">
-		<input id="billNumInput" type="number" min="1" placeholder="Bill No."/>
-		<select id="billCitySelect"></select>
-		<input id="searchBillBar" type="text" placeholder="Search" list="accList"/>
-		<input id="beginBillDate" type="date"/>
-		<input id="endBillDate" type="date"/>
-		<input id="minBillAmount" type="number" min="0" placeholder="Minimum Amount"/>
-		<input id="maxBillAmount" type="number" min="0" placeholder="Maximum Amount"/>
-		<input id="searchBillBtn" type="button" value="Search"/>
+		<div id="searchByNumber">
+			<input id="billNumInput" type="number" min="1" placeholder="Bill No."/>
+			<input id="viewBillBtn" type="button" value="View"/>
+		</div>
+		<div id="searchByFilters">
+			<select id="billCitySelect"></select>
+			<input id="searchBillBar" type="text" placeholder="Account Title" list="accList"/>
+			<input id="beginBillDate" type="date"/>
+			<input id="endBillDate" type="date"/>
+			<input id="minBillAmount" type="number" min="0" placeholder="Minimum Amount"/>
+			<input id="maxBillAmount" type="number" min="0" placeholder="Maximum Amount"/>
+			<input id="searchBillBtn" type="button" value="Search"/>
+		</div>
 	</div>
 	<div id="billRecordsDiv"></div>
 	<div id="billDetailDiv"></div>

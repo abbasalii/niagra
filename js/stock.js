@@ -46,6 +46,7 @@ Stock = new function(){
 		text += "</table>";
 
 		$("#stockDataDiv").html(text);
+
 		$(".edit-stock-btn").each(function(){
 			$(this).click(function(){
 				$(this).unbind("click");

@@ -8,6 +8,8 @@ Biller = new function(){
 	var records = null;
 	var cities = null;
 	var accounts = null;
+	var b_id = 0;
+	var info = null;
 
 	this.init = function(){
 
@@ -166,18 +168,47 @@ Biller = new function(){
 
 	this.getBillDetails = function(_id){
 
+		b_id = _id;
+		info = null;
 		Socket.getBillDetails(_id);
+	}
+
+	this.setBillInfo = function(data){
+
+		info = data[0];
 	}
 
 	this.setBillDetails = function(data){
 
-		var text = "<table id='billDetailsTable'>";
+		if(data.length==0){
+			console.log("No record found");
+			return;
+		}
+
+		if(info == null){
+			setTimeout(this.setBillDetails,100,data);
+			return;
+		}
+
+		var text = "<div id='billDetailHeader'>";
+		text += "<div>Title: " + info.TITLE + "</div>";
+		var bdate = new Date(info.B_DATE);
+		text += "<div>Date: " + bdate.toDateString() + "</div>";
+		text += "<div>Time: " + Format.formatTime(bdate) + "</div>";
+		text += "<div>Gross Total: " + Format.formatCurrency(info.AMOUNT_DUE) + "</div>";
+		text += "<div>Discount: " + info.DISCOUNT + "</div>";
+		text += "<div>Net Total: " + Format.formatCurrency(info.AMOUNT_DUE-info.DISCOUNT) + "</div>";
+		text += "<div>Amount Paid: " + Format.formatCurrency(info.AMOUNT_PAID) + "</div>";
+		text += "</div>";
+
+		text += "<table id='billDetailsTable'>";
 		text += "<tr>";
 		text += "<th>NO</th>";
 		text += "<th>NAME</th>";
 		text += "<th>COST</th>";
 		text += "<th>QUANTITY</th>";
 		text += "<th>AMOUNT</th>";
+		text += "<th>RETURN</th>";
 		text += "</tr>";
 
 		for(var i=0; i<data.length; i++){
@@ -185,12 +216,16 @@ Biller = new function(){
 			text += "<td>" + (i+1) + "</td>";
 			text += "<td>" + data[i].NAME + "</td>";
 			text += "<td>" + data[i].COST + "</td>";
-			text += "<td>" + data[i].QUANTITY + "</td>";
+			text += "<td> <input class='bill-detail-qty' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
 			text += "<td>" + (parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
+			text += "<td> <input type='checkbox'/> </td>";
 			text += "</tr>";
 		}
 		text += "</table>";
+		text += "<input id='returnItemBtn' type='button' value='Return'/>";
 		$("#billDetailDiv").html(text);
+
+		// $('#billDetailsTable td:nth-child(6),th:nth-child(6)').hide();
 	}
 }
 
@@ -202,6 +237,15 @@ $(function() {
 
 	$("#billCitySelect").change(function(){
 		Biller.searchAccounts($(this).val());
+	});
+
+	$("#viewBillBtn").click(function(){
+		var id = parseInt($("#billNumInput").val());
+		if(isNaN(id) || id<=0){
+			console.log("Invalid bill number");
+			return;
+		}
+		Biller.getBillDetails(id);
 	});
 
 	$("#searchBillBtn").click(function(){

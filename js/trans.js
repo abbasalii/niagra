@@ -283,17 +283,17 @@ Trans = new function(){
 		}
 
 		var other = parseInt($("#newTransAmount2").val());
-		var bill = '';
+		var bill = $("#newTransDetail2").val().trim();
 		if(t_type=='both'){
 			if(isNaN(other) || other<=0){
 				console.log("Invalid Credit amount");
 				return;
 			}
 
-			bill = detail;
-			if(auto['BILL']!=undefined){
-				detail = "Bill No. " + auto['BILL'];
-			}
+			// bill = detail;
+			// if(auto['BILL']!=undefined){
+			// 	detail = "Bill No. " + auto['BILL'];
+			// }
 		}
 		else
 			other = 0;
@@ -322,9 +322,11 @@ Trans = new function(){
 		if(t_type=='both'){
 			$("#newTransAmount").attr("placeholder","Debit");
 			$("#newTransAmount2").show();
+			$("#newTransDetail2").show();
 		}
 		else{
 			$("#newTransAmount2").hide();
+			$("#newTransDetail2").hide();
 			if(t_type=='credit'){
 				$("#newTransAmount").attr("placeholder","Credit");
 			}
@@ -352,7 +354,8 @@ Trans = new function(){
 			$("#newTransAmount2").val(auto['CREDIT']);
 			Trans.displayFields();
 		}
-		$("#newTransDetail").val(auto['DETAIL']);
+		$("#newTransDetail").val("Bill No. " + auto['BILL']);
+		$("#newTransDetail2").val(auto['DETAIL']);
 	}
 }
 
