@@ -29,6 +29,10 @@ GET_ITEM_LIST = 'get_item_list';
 ITEM_LIST_RESPONSE = 'item_list_response';
 NEW_BILL = 'new_bill';
 NEW_BILL_SUCCESS = 'new_bill_success';
+BILL_SEARCH = 'bill_search';
+BILL_RESPONSE = 'bill_response';
+BILL_DETAILS = 'bill_details';
+BILL_DETAIL_RESPONSE = 'bill_detail_response';
 
 
 ACC_REQ_TYPE_TRANS = 1;
@@ -701,6 +705,102 @@ var createNewBill = function(data,socket){
 	});
 }
 
+var searchBillRecords = function(data,socket){
+
+	var query = 'SELECT * from BILL WHERE B_DATE>=? AND B_DATE<=? AND AMOUNT_DUE>=? AND AMOUNT_DUE<=?';
+	var values = [data.B_DATE,data.E_DATE,data.MIN,data.MAX];
+	if(data.CITY_ID>-1){
+
+		if(data.TITLE.length>0)
+		{
+			console.log("Both city and title");
+			query += ' AND ACCOUNT_ID IN ('+
+						'SELECT ID FROM ACCOUNT WHERE CITY_ID=? AND TITLE LIKE "%'+data.TITLE+'%"'
+				+')';
+			values.push(data.CITY_ID);
+			// values.push(data.TITLE);
+		}
+		else{
+			console.log("city only");
+			query += ' AND ACCOUNT_ID IN ('+
+						'SELECT ID FROM ACCOUNT WHERE CITY_ID=?'
+				+')';
+			values.push(data.CITY_ID);
+		}
+	}
+	else if(data.TITLE.length>0){
+
+		console.log("title only");
+		query += ' AND ACCOUNT_ID IN ('+
+					'SELECT ID FROM ACCOUNT WHERE TITLE LIKE "%'+data.TITLE+'%"'
+			+')';
+		// values.push(data.TITLE);
+	}
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		connection.query(query, values, function(err, rows, fields) {
+			connection.release();
+			if (err){
+				socket.emit(QUERY_ERROR);
+				console.log("Failed to fetch bill records");
+				return;
+			}
+			else{
+				console.log("Sending bill records");
+				socket.emit(BILL_RESPONSE,JSON.stringify(rows));
+				return;
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var getBillDetails = function(id,socket){
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		var query = 'SELECT ITEM.NAME, SALE.COST, SALE.QUANTITY from SALE'
+					+ ' INNER JOIN ITEM'
+					+ ' ON SALE.ITEM_ID=ITEM.ID'
+					+ ' WHERE SALE.BILL_ID=?';
+		connection.query(query,[id], function(err, rows, fields) {
+			connection.release();
+			if (err){
+				socket.emit(QUERY_ERROR);
+				console.log("Failed to fetch bill details");
+				return;
+			}
+			else{
+				console.log("Sending bill details");
+				socket.emit(BILL_DETAIL_RESPONSE,JSON.stringify(rows));
+				return;
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
 var mysql 	= require('mysql');
 var http 	= require('http').createServer(handler);
 var fs 		= require('fs');
@@ -782,6 +882,16 @@ io.sockets.on('connection', function (socket) {
 	socket.on(NEW_BILL,function(data){
 		console.log('Client has sent new bill details');
 		createNewBill(JSON.parse(data),socket);
+	});
+
+	socket.on(BILL_SEARCH,function(data){
+		console.log('Client has sent bill search query');
+		searchBillRecords(data,socket);
+	});
+
+	socket.on(BILL_DETAILS,function(data){
+		console.log('Client has requested bill details for bill # '+data.id);
+		getBillDetails(data.id,socket);
 	});
 });
 

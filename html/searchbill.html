@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Niagra Sports - Search Bill Record</title>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="js/Socket.js"></script>
+	<script type="text/javascript" src="js/searchbill.js"></script>
+	<script type="text/javascript" src="js/Format.js"></script>
+	<style type="text/css">
+		th,td{
+			border: 1px solid black;
+		}
+		.bill-detail-btn{
+
+		}
+	</style>
+</head>
+<body>
+	<div id="billSearchDiv">
+		<input id="billNumInput" type="number" min="1" placeholder="Bill No."/>
+		<select id="billCitySelect"></select>
+		<input id="searchBillBar" type="text" placeholder="Search" list="accList"/>
+		<input id="beginBillDate" type="date"/>
+		<input id="endBillDate" type="date"/>
+		<input id="minBillAmount" type="number" min="0" placeholder="Minimum Amount"/>
+		<input id="maxBillAmount" type="number" min="0" placeholder="Maximum Amount"/>
+		<input id="searchBillBtn" type="button" value="Search"/>
+	</div>
+	<div id="billRecordsDiv"></div>
+	<div id="billDetailDiv"></div>
+	<datalist id="accList"></datalist>
+</body>
+</html>

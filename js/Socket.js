@@ -31,6 +31,10 @@ GET_ITEM_LIST = 'get_item_list';
 ITEM_LIST_RESPONSE = 'item_list_response';
 NEW_BILL = 'new_bill';
 NEW_BILL_SUCCESS = 'new_bill_success';
+BILL_SEARCH = 'bill_search';
+BILL_RESPONSE = 'bill_response';
+BILL_DETAILS = 'bill_details';
+BILL_DETAIL_RESPONSE = 'bill_detail_response';
 
 
 Socket = new function(){
@@ -90,6 +94,8 @@ Socket = new function(){
 				Trans.setAccounts(JSON.parse(data));
 			else if(typeof(NewBill)=='object')
 				NewBill.setAccounts(JSON.parse(data));
+			else if(typeof(Biller)=='object')
+				Biller.setAccounts(JSON.parse(data));
 		});
 
 		socket.on(ACCOUNT_DETAIL_RESPONSE,function(data){
@@ -103,6 +109,8 @@ Socket = new function(){
 				Ledger.setCities(JSON.parse(data));
 			else if(typeof(Trans)=='object')
 				Trans.setCities(JSON.parse(data));
+			else if(typeof(Biller)=='object')
+				Biller.setCities(JSON.parse(data));
 		});
 
 		socket.on(ACCOUNT_UPDATE_SUCCESS,function(){
@@ -130,6 +138,16 @@ Socket = new function(){
 		socket.on(NEW_BILL_SUCCESS,function(data){
 			console.log("New Bill successfully created");
 			NewBill.proceedToTransaction(data.id);
+		});
+
+		socket.on(BILL_RESPONSE,function(data){
+			console.log("Received bill records");
+			Biller.setRecords(JSON.parse(data));
+		});
+
+		socket.on(BILL_DETAIL_RESPONSE,function(data){
+			console.log("Received bill details");
+			Biller.setBillDetails(JSON.parse(data));
 		});
 	}
 
@@ -200,6 +218,16 @@ Socket = new function(){
 	this.createNewBill = function(data){
 		console.log("Sending new bill details");
 		socket.emit(NEW_BILL,JSON.stringify(data));
+	}
+
+	this.searchBillRecords = function(data){
+		console.log("Sending bill records search query");
+		socket.emit(BILL_SEARCH,data);
+	}
+
+	this.getBillDetails = function(_id){
+		console.log("Requesting bill details for id: "+_id);
+		socket.emit(BILL_DETAILS,{id:_id});
 	}
 }
 
