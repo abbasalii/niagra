@@ -10,6 +10,7 @@ Biller = new function(){
 	var accounts = null;
 	var b_id = 0;
 	var info = null;
+	var itemList = null;
 
 	this.init = function(){
 
@@ -185,6 +186,8 @@ Biller = new function(){
 			return;
 		}
 
+		itemList = data;
+
 		if(info == null){
 			setTimeout(this.setBillDetails,100,data);
 			return;
@@ -207,6 +210,7 @@ Biller = new function(){
 		text += "<th>NAME</th>";
 		text += "<th>COST</th>";
 		text += "<th>QUANTITY</th>";
+		text += "<th>PAYABLE</th>";
 		text += "<th>AMOUNT</th>";
 		text += "<th>RETURN</th>";
 		text += "</tr>";
@@ -218,14 +222,143 @@ Biller = new function(){
 			text += "<td>" + data[i].COST + "</td>";
 			text += "<td> <input class='bill-detail-qty' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
 			text += "<td>" + (parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
-			text += "<td> <input type='checkbox'/> </td>";
+			text += "<td class='bill-detail-return-amount'></td>";
+			text += "<td> <input class='bill-detail-return-box' type='checkbox'/> </td>";
 			text += "</tr>";
 		}
 		text += "</table>";
+		text += "<div id='itemReturnTotalDiv'>Total: <span id='itemReturnTotalSpan'>0</span></div>";
+		text += "<div id='itemReturnDetailDiv'><label>Details<input type='text' placeholder='Return on Bill'/></label></div>";
 		text += "<input id='returnItemBtn' type='button' value='Return'/>";
 		$("#billDetailDiv").html(text);
 
-		// $('#billDetailsTable td:nth-child(6),th:nth-child(6)').hide();
+		$("#billDetailsTable input.bill-detail-return-box").each(function(){
+
+			$(this).click(function(){
+				var n = $(this).closest('tr').index()-1;
+				if($(this).prop('checked')){
+					$("#billDetailsTable input.bill-detail-qty").eq(n).prop('readonly',false);
+					Biller.calculateAmount(n);
+					$("#billDetailsTable input.bill-detail-qty").eq(n).change(function(){
+						Biller.calculateAmount(n);
+					});
+				}
+				else{
+					$("#billDetailsTable input.bill-detail-qty").eq(n).val(itemList[n].QUANTITY);
+					$("#billDetailsTable input.bill-detail-qty").eq(n).prop('readonly',true);
+					$("#billDetailsTable .bill-detail-return-amount").eq(n).html("");
+					$("#billDetailsTable input.bill-detail-qty").eq(n).unbind("change");
+					Biller.calculateTotal();
+				}
+			});
+		});
+
+		Biller.hideExtraColumns();
+
+		$("#returnItemBtn").click(function(){
+
+			console.log("Return items button clicked");
+
+			Biller.showExtraColumns();
+			$(this).unbind("click");
+			$(this).val("Proceed");
+			$(this).click(function(){
+				console.log("Proceed button clicked");
+				if(Biller.validateData()){
+					Biller.returnItems();
+				}
+			});
+		});
+	}
+
+	this.showExtraColumns = function(){
+		for(var i=6; i<8; i++)
+			$('#billDetailsTable td:nth-child('+i+'),th:nth-child('+i+')').show();
+		$("#itemReturnTotalDiv").show();
+		$("#itemReturnDetailDiv").show();
+		$("#itemReturnDetailDiv input").eq(0).val("Return on Bill No. "+ b_id);
+	}
+
+	this.hideExtraColumns = function(){
+		for(var i=6; i<8; i++)
+			$('#billDetailsTable td:nth-child('+i+'),th:nth-child('+i+')').hide();
+		$("#itemReturnTotalDiv").hide();
+		$("#itemReturnDetailDiv").hide();
+	}
+
+	this.calculateAmount = function(n){
+
+		var qty = parseInt($("#billDetailsTable input.bill-detail-qty").eq(n).val());
+		if(qty<1){
+			$("#billDetailsTable input.bill-detail-qty").eq(n).val(1);
+			qty=1;
+		}
+		if(qty>itemList[n].QUANTITY){
+			$("#billDetailsTable input.bill-detail-qty").eq(n).val(itemList[n].QUANTITY);
+			qty=itemList[n].QUANTITY;
+		}
+		if(!isNaN(qty))
+			$("#billDetailsTable .bill-detail-return-amount").eq(n).html(qty*itemList[n].COST);
+
+		Biller.calculateTotal();
+	}
+
+	this.calculateTotal = function(){
+
+		var total = 0;
+		$("#billDetailsTable input:checked").each(function(){
+
+			var ind = $(this).closest('tr').index()-1;
+			var q = parseInt($("#billDetailsTable input.bill-detail-qty").eq(ind).val());
+			var p = q*itemList[ind].COST;
+			total += p;
+		});
+		$("#itemReturnTotalSpan").html(total);
+	}
+
+	this.validateData = function(){
+
+		console.log("Validating data");
+		var l = $("#billDetailsTable input:checked").length;
+		if(l==0){
+			console.log("No item selected");
+			return false;
+		}
+		return true;
+	}
+
+	this.returnItems = function(){
+
+		console.log("Creating list of items to be returned");
+
+		var data = {};
+		data['BILL_ID'] = b_id;
+		data['AMOUNT'] = parseInt($("#itemReturnTotalSpan").html());
+		var l_id = [];
+		$("#billDetailsTable input:checked").each(function(){
+			var n = $(this).closest('tr').index()-1;
+			var qty = $("#billDetailsTable input.bill-detail-qty").eq(n).val();
+			l_id.push({SALE_ID:itemList[n].ID,QUANTITY:qty});
+		});
+		data['SALES'] = l_id;
+
+		Socket.createReturn(data);
+	}
+
+	this.proceedToTransaction = function(){
+
+		console.log("Proceeding to transaction");
+		var acc_id = -1;
+		for(var i=0; i<accounts.length; i++)
+			if(accounts[i].TITLE==info.TITLE){
+				acc_id = accounts[i].ID;
+				break;
+			}
+
+		var d = 0;
+		var c = parseInt($("#itemReturnTotalSpan").html());
+		var t = $("#itemReturnDetailDiv input").eq(0).val();
+		location.href = "/trans.html?a="+acc_id+"&d="+d+"&c="+c+"&b="+(-1)+"&t="+t;
 	}
 }
 

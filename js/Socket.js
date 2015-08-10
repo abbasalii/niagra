@@ -36,6 +36,8 @@ BILL_RESPONSE = 'bill_response';
 BILL_DETAILS = 'bill_details';
 BILL_DETAIL_RESPONSE = 'bill_detail_response';
 BILL_INFO = 'bill_info';
+RETURN_ITEM_LIST = 'return_item_list';
+NEW_RETURN_SUCCESS = 'new_return_success';
 
 
 Socket = new function(){
@@ -155,6 +157,11 @@ Socket = new function(){
 			console.log("Received bill info");
 			Biller.setBillInfo(JSON.parse(data));
 		});
+
+		socket.on(NEW_RETURN_SUCCESS,function(){
+			console.log("Returns successfully inserted");
+			Biller.proceedToTransaction();
+		});
 	}
 
 	this.getState = function(){
@@ -234,6 +241,11 @@ Socket = new function(){
 	this.getBillDetails = function(_id){
 		console.log("Requesting bill details for id: "+_id);
 		socket.emit(BILL_DETAILS,{id:_id});
+	}
+
+	this.createReturn = function(data){
+		console.log("Sending return item details");
+		socket.emit(RETURN_ITEM_LIST,data);
 	}
 }
 

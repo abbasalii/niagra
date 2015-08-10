@@ -34,6 +34,8 @@ BILL_RESPONSE = 'bill_response';
 BILL_DETAILS = 'bill_details';
 BILL_DETAIL_RESPONSE = 'bill_detail_response';
 BILL_INFO = 'bill_info';
+RETURN_ITEM_LIST = 'return_item_list';
+NEW_RETURN_SUCCESS = 'new_return_success';
 
 
 ACC_REQ_TYPE_TRANS = 1;
@@ -831,7 +833,7 @@ var getBillDetails = function(id,socket){
 			return;
 		}  
 
-		var query = 'SELECT ITEM.NAME, SALE.COST, SALE.QUANTITY from SALE'
+		var query = 'SELECT SALE.ID, ITEM.NAME, SALE.COST, SALE.QUANTITY from SALE'
 					+ ' INNER JOIN ITEM'
 					+ ' ON SALE.ITEM_ID=ITEM.ID'
 					+ ' WHERE SALE.BILL_ID=?';
@@ -846,6 +848,58 @@ var getBillDetails = function(id,socket){
 				console.log("Sending bill details");
 				socket.emit(BILL_DETAIL_RESPONSE,JSON.stringify(rows));
 				return;
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var returnItems = function(data,socket){
+
+	var sales = data.SALES;
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		connection.query('INSERT INTO RETURN_IN (R_DATE,BILL_ID,AMOUNT) VALUES (NOW(),?,?)',
+		[data.BILL_ID,data.AMOUNT],
+		function(err,rows,fields){
+			if(err){
+				console.log("Failed to create new return");
+				connection.release();
+			}
+			else{
+				var r_id = rows.insertId;
+				console.log("New return successfully created with ID: "+rows.insertId);
+
+				var query = 'INSERT INTO RETURN_ITEM (RETURN_ID,SALE_ID,QUANTITY) VALUES (?,?,?)';
+				var values = [r_id,sales[0].SALE_ID,sales[0].QUANTITY];
+				for(var i=1; i<sales.length; i++){
+					query += ',(?,?,?)';
+					values.push(r_id);
+					values.push(sales[i].SALE_ID);
+					values.push(sales[i].QUANTITY);
+				}
+				connection.query(query, values,
+				function(err,rows,fields){
+					if(err){
+						console.log("Failed to insert return items");
+					}
+					else{
+						console.log("Returns successfully inserted");
+						socket.emit(NEW_RETURN_SUCCESS);
+					}
+					connection.release();
+				});
 			}
 		});
 
@@ -947,6 +1001,11 @@ io.sockets.on('connection', function (socket) {
 	socket.on(BILL_DETAILS,function(data){
 		console.log('Client has requested bill details for bill # '+data.id);
 		getBillDetails(data.id,socket);
+	});
+
+	socket.on(RETURN_ITEM_LIST,function(data){
+		console.log('Client has sent return item list');
+		returnItems(data,socket);
 	});
 });
 

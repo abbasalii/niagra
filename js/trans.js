@@ -264,7 +264,7 @@ Trans = new function(){
 		var t_type = $("#newTransType").val();
 
 		var t_date = $("#newTransDate").val();
-		if(t_date.length==0 || (new Date(t_date)>new Date())){
+		if(t_date.length==0){// || (new Date(t_date)>new Date())){
 			console.log("Invalid transaction date");
 			return;
 		}
@@ -348,14 +348,22 @@ Trans = new function(){
 		}
 
 		$("#newTransAcc").val(auto['ACCOUNT_ID']);
-		$("#newTransAmount").val(auto['DEBIT']);
-		if(auto['CREDIT']>0){
-			$("#newTransType").val('both');
-			$("#newTransAmount2").val(auto['CREDIT']);
-			Trans.displayFields();
+		if(auto['DEBIT']>0){
+			$("#newTransAmount").val(auto['DEBIT']);
+			if(auto['CREDIT']>0){
+				$("#newTransType").val('both');
+				$("#newTransAmount2").val(auto['CREDIT']);
+				Trans.displayFields();
+			}
+			$("#newTransDetail").val("Bill No. " + auto['BILL']);
+			$("#newTransDetail2").val(auto['DETAIL']);
 		}
-		$("#newTransDetail").val("Bill No. " + auto['BILL']);
-		$("#newTransDetail2").val(auto['DETAIL']);
+		else{
+			$("#newTransAmount").val(auto['CREDIT']);
+			$("#newTransType").val('credit');
+			Trans.displayFields();
+			$("#newTransDetail").val(auto['DETAIL']);
+		}
 	}
 }
 
