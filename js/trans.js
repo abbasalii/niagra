@@ -358,6 +358,18 @@ Trans = new function(){
 			$("#newTransDetail").val("Bill No. " + auto['BILL']);
 			$("#newTransDetail2").val(auto['DETAIL']);
 		}
+		else if(auto['DEBIT']==-1){
+			$("#newTransAmount").val(auto['CREDIT']);
+			$("#newTransType").val('credit');
+			Trans.displayFields();
+			$("#newTransDetail").val("Invoice No. " + auto['BILL'] + " - " + auto['DETAIL']);
+		}
+		else if(auto['DEBIT']==-2){
+			$("#newTransAmount").val(auto['CREDIT']);
+			$("#newTransType").val('debit');
+			Trans.displayFields();
+			$("#newTransDetail").val(auto['DETAIL']);
+		}
 		else{
 			$("#newTransAmount").val(auto['CREDIT']);
 			$("#newTransType").val('credit');

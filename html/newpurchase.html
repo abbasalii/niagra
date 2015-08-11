@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Niagra Sports - Record New Purchase</title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="Socket.js"></script>
+	<script type="text/javascript" src="newpurchase.js"></script>
+	<link rel="stylesheet" type="text/css" href="default.css">
+</head>
+<body>
+	<div id="newPurSumDiv">
+		<select id="newPurAccSel"></select>
+		<label>Net Payable:<input id="newPayableInput" type="number" value="0" readonly/></label>
+		<label>Purchase Details:<input id="purchaseDetailsInput" type="text" placeholder="" /></label>
+		<input id="newPurFinBtn" type="button" value="Finish"/>
+	</div>
+	<div id="purItemDiv">
+		<table id="purItemTab">
+			<tr>
+				<th>No.</th>
+				<th>ITEM NAME</th>
+				<th>PRICE</th>
+				<th>QUANTITY</th>
+				<th>AMOUNT</th>
+				<th>REMOVE</th>
+			</tr>
+			<tr>
+				<td class="item-index">1</td>
+				<td><input class="item-name" type="text" list="itemList"/></td>
+				<td><input class="item-price" type="number" min="0"/></td>
+				<td><input class="item-quantity" type="number" min="0"/></td>
+				<td class="item-amount"></td>
+				<td><input class="remove-item" type="button" value="Remove" disabled/></td>
+			</tr>
+		</table>
+	</div>
+	<datalist id="itemList"></datalist>
+</body>
+</html>
