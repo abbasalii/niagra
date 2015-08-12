@@ -219,9 +219,9 @@ Biller = new function(){
 			text += "<tr>";
 			text += "<td>" + (i+1) + "</td>";
 			text += "<td>" + data[i].NAME + "</td>";
-			text += "<td>" + data[i].COST + "</td>";
+			text += "<td>" + Format.formatCurrency(data[i].COST) + "</td>";
 			text += "<td> <input class='bill-detail-qty' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
-			text += "<td>" + (parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
+			text += "<td>" + Format.formatCurrency(parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
 			text += "<td class='bill-detail-return-amount'></td>";
 			text += "<td> <input class='bill-detail-return-box' type='checkbox'/> </td>";
 			text += "</tr>";
@@ -273,7 +273,7 @@ Biller = new function(){
 
 	this.showExtraColumns = function(){
 		for(var i=6; i<8; i++)
-			$('#billDetailsTable td:nth-child('+i+'),th:nth-child('+i+')').show();
+			$('#billDetailsTable td:nth-child('+i+'),#billDetailsTable th:nth-child('+i+')').show();
 		$("#itemReturnTotalDiv").show();
 		$("#itemReturnDetailDiv").show();
 		$("#itemReturnDetailDiv input").eq(0).val("Return on Bill No. "+ b_id);
@@ -281,7 +281,7 @@ Biller = new function(){
 
 	this.hideExtraColumns = function(){
 		for(var i=6; i<8; i++)
-			$('#billDetailsTable td:nth-child('+i+'),th:nth-child('+i+')').hide();
+			$('#billDetailsTable td:nth-child('+i+'),#billDetailsTable th:nth-child('+i+')').hide();
 		$("#itemReturnTotalDiv").hide();
 		$("#itemReturnDetailDiv").hide();
 	}
@@ -297,8 +297,10 @@ Biller = new function(){
 			$("#billDetailsTable input.bill-detail-qty").eq(n).val(itemList[n].QUANTITY);
 			qty=itemList[n].QUANTITY;
 		}
-		if(!isNaN(qty))
-			$("#billDetailsTable .bill-detail-return-amount").eq(n).html(qty*itemList[n].COST);
+		if(!isNaN(qty)){
+			var am = Format.formatCurrency(qty*itemList[n].COST);
+			$("#billDetailsTable .bill-detail-return-amount").eq(n).html(am);
+		}
 
 		Biller.calculateTotal();
 	}
@@ -313,7 +315,7 @@ Biller = new function(){
 			var p = q*itemList[ind].COST;
 			total += p;
 		});
-		$("#itemReturnTotalSpan").html(total);
+		$("#itemReturnTotalSpan").html(Format.formatCurrency(total));
 	}
 
 	this.validateData = function(){

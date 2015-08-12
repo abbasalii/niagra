@@ -129,7 +129,7 @@ PFinder = new function(){
 
 		records = data;
 
-		var text = "<table id='billRecordsTable'>";
+		var text = "<table id='purchaseRecordsTable'>";
 		text += "<tr>";
 		text += "<th>NO</th>";
 		text += "<th>DATE</th>";
@@ -152,19 +152,19 @@ PFinder = new function(){
 				}
 
 			text += "<td>" + new Number(data[i].PAYABLE).toLocaleString("hi-IN") + "</td>";
-			text += "<td><input class='bill-detail-btn' type='button' value='Details'/></td>";
+			text += "<td><input class='purchase-detail-btn' type='button' value='Details'/></td>";
 			text += "</tr>";
 		}
 		text += "</table>";
 		$("#purchaseRecordsDiv").html(text);
 
-		// $(".bill-detail-btn").each(function(){
-		// 	$(this).click(function(){
-		// 		var ind = $(this).closest('tr').index()-1;
-		// 		var id = records[ind].ID;
-		// 		PFinder.getBillDetails(id);
-		// 	});
-		// });
+		$(".purchase-detail-btn").each(function(){
+			$(this).click(function(){
+				var ind = $(this).closest('tr').index()-1;
+				var id = records[ind].ID;
+				PFinder.getPurchaseDetails(id);
+			});
+		});
 	}
 
 	this.getPurchaseDetails = function(_id){
@@ -216,9 +216,9 @@ PFinder = new function(){
 			text += "<tr>";
 			text += "<td>" + (i+1) + "</td>";
 			text += "<td>" + data[i].NAME + "</td>";
-			text += "<td>" + data[i].COST + "</td>";
+			text += "<td>" + Format.formatCurrency(data[i].COST) + "</td>";
 			text += "<td> <input class='purchase-detail-qty' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
-			text += "<td>" + (parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
+			text += "<td>" + Format.formatCurrency(parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
 			text += "<td class='purchase-detail-return-amount'></td>";
 			text += "<td> <input class='purchase-detail-return-box' type='checkbox'/> </td>";
 			text += "</tr>";
@@ -270,7 +270,7 @@ PFinder = new function(){
 
 	this.showExtraColumns = function(){
 		for(var i=6; i<8; i++)
-			$('#purchaseDetailsTable td:nth-child('+i+'),th:nth-child('+i+')').show();
+			$('#purchaseDetailsTable td:nth-child('+i+'),#purchaseDetailsTable th:nth-child('+i+')').show();
 		$("#itemReturnTotalDiv").show();
 		$("#itemReturnDetailDiv").show();
 		$("#itemReturnDetailDiv input").eq(0).val("Return on Invoice No. "+ b_id);
@@ -278,7 +278,7 @@ PFinder = new function(){
 
 	this.hideExtraColumns = function(){
 		for(var i=6; i<8; i++)
-			$('#purchaseDetailsTable td:nth-child('+i+'),th:nth-child('+i+')').hide();
+			$('#purchaseDetailsTable td:nth-child('+i+'),#purchaseDetailsTable th:nth-child('+i+')').hide();
 		$("#itemReturnTotalDiv").hide();
 		$("#itemReturnDetailDiv").hide();
 	}

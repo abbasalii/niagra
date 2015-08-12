@@ -134,7 +134,7 @@ Purchaser = new function(){
 	}
 
 	this.calculateAmount = function(ind){
-		// console.log('calculateAmount');
+
 		var price = parseInt($("#purItemTab").find('input.item-price').eq(ind).val());
 		var qty = parseInt($("#purItemTab input.item-quantity").eq(ind).val());
 		if(price<=0){
@@ -146,8 +146,10 @@ Purchaser = new function(){
 			$("#purItemTab input.item-quantity").eq(ind).val(qty);
 		}
 
-		if(!isNaN(price) && !isNaN(qty))
-			$("#purItemTab td.item-amount").eq(ind).html(price*qty);
+		if(!isNaN(price) && !isNaN(qty)){
+			var am = price*qty;
+			$("#purItemTab td.item-amount").eq(ind).html(Format.formatCurrency(am));
+		}
 		else
 			$("#purItemTab td.item-amount").eq(ind).html("");
 
@@ -157,12 +159,21 @@ Purchaser = new function(){
 	this.calculateTotal = function(){
 
 		var tm = 0;
-		$("#purItemTab td.item-amount").each(function(){
-
-			var am = parseInt($(this).html());
+		
+		var l = $("#purItemTab td.item-amount").length;
+		for(var i=0; i<l; i++){
+			var price = parseInt($("#purItemTab").find('input.item-price').eq(i).val());
+			var qty = parseInt($("#purItemTab input.item-quantity").eq(i).val());
+			var am = price*qty;
 			if(!isNaN(am))
 				tm += am;
-		});
+		}
+		// $("#purItemTab td.item-amount").each(function(){
+
+		// 	var am = parseInt($(this).html());
+		// 	if(!isNaN(am))
+		// 		tm += am;
+		// });
 		$("#newPayableInput").val(tm);
 	}
 
