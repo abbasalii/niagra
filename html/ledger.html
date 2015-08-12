@@ -7,7 +7,7 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="Socket.js"></script>
 	<script type="text/javascript" src="ledger.js"></script>
-	<script type="text/javascript" src="format.js"></script>
+	<script type="text/javascript" src="Format.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
 	<link rel="stylesheet" type="text/css" href="ledger.css">
 </head>
@@ -18,22 +18,33 @@
 	</div>
 	<div id="searchLedgerDiv">
 		<select class="form-control" id="ledgerCitySelect"></select>
+		<select class="form-control" id="ledgerAccountTypeSelect">
+			<option value='b'>Both</option>
+			<option value='c'>Creditors</option>
+			<option value='d'>Debtors</option>
+		</select>
 		<input class="form-control search-box" id="searchLedgerBar" type="text" placeholder="Search account"/>
 		<input class="btn btn-primary" id="searchLedgerBtn" type="button" value="Search"/>
 	</div>
-	<div id="newAccDiv">
-		<input class="form-control" id="newAccTitle" type="text" placeholder="Title"/>
-		<input class="form-control" id="newAccCity" type="text" placeholder="City" list="cityList"/>
-		<input class="form-control" id="newAccPtcl" type="text" placeholder="Ptcl"/>
-		<input class="form-control" id="newAccCell" type="text" placeholder="Mobile"/>
-		<input class="form-control" id="newAccExt" type="text" placeholder="Detail"/>
-		<input class="form-control" id="newAccBal" type="number" placeholder="Balance"/>
-		<input class="form-control" id="newAccDate" type="date" />
-		<input id="newAccBtn" type="button" value="Insert"/>
+	<div id="new-account-wrapper">
+		<div id="new-account-container">
+			<input id="cross-btn" type="button" value="x"/>
+			<div id="newAccDiv">
+				<h2>Create New Account</h2>
+				<div class="form-group"><input class="form-control" id="newAccTitle" type="text" placeholder="Title"/></div>
+				<div class="form-group"><input class="form-control" id="newAccCity" type="text" placeholder="City" list="cityList"/></div>
+				<div class="form-group"><input class="form-control" id="newAccPtcl" type="text" placeholder="Ptcl"/></div>
+				<div class="form-group"><input class="form-control" id="newAccCell" type="text" placeholder="Mobile"/></div>
+				<div class="form-group"><input class="form-control" id="newAccExt" type="text" placeholder="Detail"/></div>
+				<div class="form-group"><input class="form-control" id="newAccBal" type="number" placeholder="Balance"/></div>
+				<div class="form-group"><input class="form-control" id="newAccDate" type="date" /></div>
+				<div class="form-group"><input class="btn btn-success" id="newAccBtn" type="button" value="Insert"/></div>
+			</div>
+		</div>
 	</div>
 	<datalist id="cityList"></datalist>
-	<div id="ledgerDataDiv"></div>
-	<div id="showNewAccountDiv">
+	<div id="ledger-content-wrapper">
+		<div id="ledgerDataDiv"></div>
 		<input id="showNewAccountBtn" type="image" src="profile.png">
 	</div>
 	<div id="ledgerDetailDiv"></div>

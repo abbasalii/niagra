@@ -66,6 +66,7 @@ Ledger = new function(){
 		var city = $("#ledgerCitySelect").val();
 		var list = [];
 		var out = [];
+		var tmp = [];
 		if(city>-1){
 			for(var i=0; i<ledgers.length; i++)
 				if(ledgers[i].CITY_ID==city)
@@ -81,7 +82,20 @@ Ledger = new function(){
 		}
 		else
 			out = list;
-		this.displayLedger(out);
+
+		var _t =$("#ledgerAccountTypeSelect").val();
+		if(_t!= "b"){
+			console.log("not both");
+			console.log(_t);
+			for(var i=0; i<out.length; i++){
+
+				if((_t=="c" && out[i].BALANCE<=0) || (_t=="d" && out[i].BALANCE>=0))
+					tmp.push(out[i]);
+				}
+		}
+		else
+			tmp = out;
+		this.displayLedger(tmp);
 	}
 
 	this.displayLedger = function(data){
@@ -109,7 +123,7 @@ Ledger = new function(){
 					text += "<td class='ledger-city-field'>" + cities[j].NAME + "</td>";
 					break;
 				}
-			text += "<td class='ledger-cell-field'>" + data[i].CELL + "</td>";
+			text += "<td class='ledger-cell-field'>" + Format.formatMobile(data[i].CELL) + "</td>";
 			if(data[i].BALANCE<0)
 				text += "<td class='edit-balance-field balance-negative-field'>" + Format.formatCurrency(data[i].BALANCE) + "</td>";
 			else
@@ -276,7 +290,12 @@ $(function() {
 
 	$("#showNewAccountBtn").click(function(){
 		console.log("Show New Account Div");
-		$("#newAccDiv").show("slow");
+		$("#new-account-wrapper").show("slow");
+	});
+
+	$("#cross-btn").click(function(){
+		console.log("Cross btn clicked");
+		$("#new-account-wrapper").hide("slow");
 	});
 
 	$("#newAccBtn").click(function(){
