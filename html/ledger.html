@@ -7,26 +7,39 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="Socket.js"></script>
 	<script type="text/javascript" src="ledger.js"></script>
+	<script type="text/javascript" src="format.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
+	<link rel="stylesheet" type="text/css" href="ledger.css">
 </head>
 <body>
+	<div id="header">
+		<div id="logo"></div>
+		<h1 id="heading">Niagra Sports Management System</h1>
+	</div>
 	<div id="searchLedgerDiv">
-		<input id="searchLedgerBar" type="text" placeholder="Search"/>
-		<select id="ledgerCitySelect"></select>
-		<input id="searchLedgerBtn" type="button" value="Search"/>
+		<select class="form-control" id="ledgerCitySelect"></select>
+		<input class="form-control search-box" id="searchLedgerBar" type="text" placeholder="Search account"/>
+		<input class="btn btn-primary" id="searchLedgerBtn" type="button" value="Search"/>
 	</div>
 	<div id="newAccDiv">
-		<input id="newAccTitle" type="text" placeholder="Title"/>
-		<input id="newAccCity" type="text" placeholder="City" list="cityList"/>
-		<input id="newAccPtcl" type="text" placeholder="Ptcl"/>
-		<input id="newAccCell" type="text" placeholder="Mobile"/>
-		<input id="newAccExt" type="text" placeholder="Detail"/>
-		<input id="newAccBal" type="number" placeholder="Balance"/>
-		<input id="newAccDate" type="date" />
+		<input class="form-control" id="newAccTitle" type="text" placeholder="Title"/>
+		<input class="form-control" id="newAccCity" type="text" placeholder="City" list="cityList"/>
+		<input class="form-control" id="newAccPtcl" type="text" placeholder="Ptcl"/>
+		<input class="form-control" id="newAccCell" type="text" placeholder="Mobile"/>
+		<input class="form-control" id="newAccExt" type="text" placeholder="Detail"/>
+		<input class="form-control" id="newAccBal" type="number" placeholder="Balance"/>
+		<input class="form-control" id="newAccDate" type="date" />
 		<input id="newAccBtn" type="button" value="Insert"/>
 	</div>
 	<datalist id="cityList"></datalist>
 	<div id="ledgerDataDiv"></div>
+	<div id="showNewAccountDiv">
+		<input id="showNewAccountBtn" type="image" src="profile.png">
+	</div>
 	<div id="ledgerDetailDiv"></div>
+	<div id="footer">
+		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
+		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
+	</div>
 </body>
 </html>

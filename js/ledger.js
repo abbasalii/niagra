@@ -90,7 +90,7 @@ Ledger = new function(){
 			return;
 		}
 		result = data;
-		var text = "<table id='ledgerTable'>";
+		var text = "<table id='ledgerTable' >";
 		text += "<tr>";
 		text += "<th>No.</th>";
 		text += "<th>TITLE</th>";
@@ -103,14 +103,17 @@ Ledger = new function(){
 		for(var i=0; i<data.length; i++){
 			text += "<tr>";
 			text += "<td>" + (i+1) + "</td>";
-			text += "<td class='ledger-title-field'><a href='/trans.html?id="+data[i].ID+"'>" + data[i].TITLE + "</a></td>";
+			text += "<td class='ledger-title-field'><a href='/trans.html?id="+data[i].ID+"' title='Click to View Transactions'>" + data[i].TITLE + "</a></td>";
 			for(var j=0; j<cities.length; j++)
 				if(data[i].CITY_ID==cities[j].ID) {
 					text += "<td class='ledger-city-field'>" + cities[j].NAME + "</td>";
 					break;
 				}
 			text += "<td class='ledger-cell-field'>" + data[i].CELL + "</td>";
-			text += "<td class='edit-balance-field'>" + data[i].BALANCE + "</td>";
+			if(data[i].BALANCE<0)
+				text += "<td class='edit-balance-field balance-negative-field'>" + Format.formatCurrency(data[i].BALANCE) + "</td>";
+			else
+				text += "<td class='edit-balance-field balance-positive-field'>" + Format.formatCurrency(data[i].BALANCE) + "</td>";
 			text += "<td><input class='detail-ledger-btn' type='button' value='View Details'/></td>";
 			text += "</tr>";
 		}
@@ -269,6 +272,11 @@ $(function() {
 	$("#searchLedgerBtn").click(function(){
 		console.log("Search for ledger button clicked");
 		Ledger.displaySearchLedger();
+	});
+
+	$("#showNewAccountBtn").click(function(){
+		console.log("Show New Account Div");
+		$("#newAccDiv").show("slow");
 	});
 
 	$("#newAccBtn").click(function(){

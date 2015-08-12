@@ -80,6 +80,40 @@ var handler = function(req, res){
 			}
 		);
 	}
+	else if(action.indexOf(".jpg")>-1){  	
+  	// if(reqModDate==last){
+  	// 	res.writeHead(304, {'Content-Type': 'text/css', 'Last-Modified': last, 'Cache-Control':'max-age=86400'});
+  	// 	return res.end();
+  	// }
+
+		fs.readFile(__dirname + '/images' + action,
+			function (err, data) {
+				if (err) {
+					res.writeHead(500);
+					return res.end('Error loading '+action);
+				}
+				res.writeHead(200, {'Content-Type': 'image/jpg'});//, 'Last-Modified': last, 'Cache-Control':'max-age=86400'});
+				res.end(data);
+			}
+		);
+	}
+	else if(action.indexOf(".png")>-1){  	
+  	// if(reqModDate==last){
+  	// 	res.writeHead(304, {'Content-Type': 'text/css', 'Last-Modified': last, 'Cache-Control':'max-age=86400'});
+  	// 	return res.end();
+  	// }
+
+		fs.readFile(__dirname + '/images' + action,
+			function (err, data) {
+				if (err) {
+					res.writeHead(500);
+					return res.end('Error loading '+action);
+				}
+				res.writeHead(200, {'Content-Type': 'image/png'});//, 'Last-Modified': last, 'Cache-Control':'max-age=86400'});
+				res.end(data);
+			}
+		);
+	}
 	else {
 		// if(reqModDate==last) {
 		// 	res.writeHead(304, {'Content-Type': 'text/html', 'Last-Modified': last, 'Cache-Control':'max-age=86400'});
@@ -865,7 +899,7 @@ var pool 	=    mysql.createPool({
     connectionLimit : 100, //important
     host     : 'localhost',
     user     : 'root',
-    password : 'lionking',
+    password : '',
     database : 'niagra_sports',
     debug    :  false
 });

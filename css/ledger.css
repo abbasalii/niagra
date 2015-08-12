@@ -1,0 +1,69 @@
+#searchLedgerDiv {
+	width: 660px;
+	margin: 15px auto; 
+}
+.search-box {
+	width: 448px;
+}
+.detail-ledger-btn {
+	background-color: rgba(0,0,0,0);
+	border: none;
+	/*color: #000;*/
+}
+.detail-ledger-btn:hover {
+	cursor: pointer;
+}
+#searchLedgerDiv select {
+	width: 128px;
+	height: 30px;
+}
+#newAccDiv {
+	display: none;
+}
+
+#ledgerDataDiv {
+	width: 800px;
+	margin: 0 auto;
+}
+#ledgerTable {
+	border-collapse: collapse;
+	border: 2px solid #A8B3BD;
+	border-radius: 3px;
+
+}
+
+#ledgerTable th {
+	background-color: #4F5B6B;
+	color: #fff;
+	/*border: 2px solid #A8B3BD;*/
+	/*border-radius: 3px;*/
+	padding: 10px;
+	font-weight: bold;
+}
+#ledgerTable td {
+	border: 2px solid #A8B3BD;
+	border-radius: 3px;
+	padding: 10px;
+}
+
+#ledgerTable td a {
+	color: #333;
+}
+
+.ledger-title-field {
+	width: 224px;
+}
+.ledger-city-field {
+	width: 164px;
+}
+.edit-balance-field {
+	text-align: right;
+}
+
+.balance-positive-field {
+	color: #0000ff
+}
+
+.balance-negative-field {
+	color: #ff0000;
+}
