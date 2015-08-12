@@ -8,16 +8,13 @@
 	<script type="text/javascript" src="Socket.js"></script>
 	<script type="text/javascript" src="trans.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
-	<style type="text/css">
-		.extra-amount-field{
-			display: none;
-		}
-		.extra-detail-field{
-			display: none;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="trans.css">
 </head>
 <body>
+	<div id="header">
+		<div id="logo"></div>
+		<h1 id="heading">Niagra Sports Management System</h1>
+	</div>
 	<div id="searchTransDiv">
 		<select id="transCitySelect"></select>
 		<input id="searchTransBar" type="text" placeholder="Search" list="accList"/>
@@ -41,8 +38,16 @@
 		<input id="newTransDetail2" class="extra-detail-field" type="text" placeholder="Description"/>
 		<input id="newTransBtn" type="button" value="Proceed"/>
 	</div>
-	<div id="transDataDiv"></div>
+	<div id="trans-content-wrapper">
+		<div id="transDataDiv"></div>
+		<input id="showNewTransBtn" type="image" src="transaction.png">
+	</div>
+	<!-- <div id="transDataDiv"></div> -->
 	<datalist id="cityList"></datalist>
 	<datalist id="accList"></datalist>
+	<div id="footer">
+		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
+		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
+	</div>
 </body>
 </html>

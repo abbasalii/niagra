@@ -14,7 +14,7 @@ Stock = new function(){
 	this.displayStock = function(data){
 
 		if(categories==null){
-			setTimeout(this.displayStock,333,data);
+			setTimeout(this.displayStock,133,data);
 			return;
 		}
 		result = data;
@@ -222,5 +222,13 @@ $(function() {
 	});
 	$("#createStockBtn").click(function(){
 		Stock.createStock();
+	});
+
+	$("#showNewStockBtn").click(function(){
+		$("#new-stock-wrapper").show("slow");
+	});
+
+	$("#new-stock-dissmiss-btn").click(function(){
+		$("#new-stock-wrapper").hide("slow");
 	});
 });

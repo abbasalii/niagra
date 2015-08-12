@@ -153,20 +153,20 @@ Trans = new function(){
 	this.setTransactions = function(data){
 		transs = data;
 
-		var text = "<table id='transDataTab'>";
+		var text = "<table class='table-default'>";
 		text += "<tr>";
-		text += "<th>No.</th>";
+		text += "<th class='trans-index-class'>No.</th>";
 		text += "<th>DATE</th>";
 		text += "<th>TIME</th>";
 		text += "<th>TITLE</th>";
 		text += "<th>AMOUNT</th>";
-		text += "<th>DESCRIPTION</th>";
+		text += "<th class='trans-desc-class'>DESCRIPTION</th>";
 		text += "</tr>";
 
 		for(var i=0; i<transs.length; i++){
 
 			text += "<tr>";
-			text += "<td>" + (i+1) + "</td>";
+			text += "<td class='trans-index-class'>" + (i+1) + "</td>";
 			var tdate = new Date(transs[i].T_DATE);
 			text += "<td>" + tdate.toDateString(); + "</td>";
 			text += "<td>" + this.formatTime(tdate) + "</td>";
@@ -176,7 +176,7 @@ Trans = new function(){
 					break;
 				}
 			text += "<td>" + transs[i].AMOUNT + "</td>";
-			text += "<td>" + transs[i].DESCRIPTION + "</td>";
+			text += "<td class='trans-desc-class'>" + transs[i].DESCRIPTION + "</td>";
 			text += "</tr>";
 		}
 

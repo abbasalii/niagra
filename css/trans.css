@@ -1,0 +1,35 @@
+.extra-amount-field{
+	display: none;
+}
+.extra-detail-field{
+	display: none;
+}
+
+#transDataDiv {
+	position: relative;
+	width: 800px;
+	float:left;
+}
+#trans-content-wrapper{
+	width: 1015px;
+	height: 500px;
+	position: relative;
+	left: 50%;
+	margin-left: -405px;
+
+}
+#showNewTransBtn{
+	position: relative;
+	float: left;
+	left: 15px;
+	width: 200px;
+	height: 200px;
+}
+
+.trans-desc-class{
+	width: 240px;
+}
+
+.trans-index-class{
+	text-align: center;
+}
