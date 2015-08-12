@@ -62,4 +62,8 @@ Format = new function(){
 	this.formatCurrency = function(n){
 		return new Number(n).toLocaleString("hi-IN");
 	}
+
+	this.formatMobile = function(num){
+		return num.substr(0,4) + " " + num.substr(4,7);
+	}
 }
