@@ -148,8 +148,10 @@ NewBill = new function(){
 		var price = parseInt($("#billItemTab").find('input.item-price').eq(ind).val());
 		var qty = parseInt($("#billItemTab input.item-quantity").eq(ind).val());
 
-		if(!isNaN(price) && !isNaN(qty) && price>0 && qty>0)
-			$("#billItemTab td.item-amount").eq(ind).html(price*qty);
+		if(!isNaN(price) && !isNaN(qty) && price>0 && qty>0){
+			var am = Format.formatCurrency(price*qty);
+			$("#billItemTab td.item-amount").eq(ind).html(am);
+		}
 		else
 			$("#billItemTab td.item-amount").eq(ind).html("");
 
@@ -159,12 +161,20 @@ NewBill = new function(){
 	this.calculateTotal = function(){
 
 		var tm = 0;
-		$("#billItemTab td.item-amount").each(function(){
-
-			var am = parseInt($(this).html());
+		var l = $("#billItemTab td.item-amount").length;
+		for(var i=0; i<l; i++){
+			var price = parseInt($("#billItemTab").find('input.item-price').eq(i).val());
+			var qty = parseInt($("#billItemTab input.item-quantity").eq(i).val());
+			var am = price*qty;
 			if(!isNaN(am))
 				tm += am;
-		});
+		}
+		// $("#billItemTab td.item-amount").each(function(){
+
+		// 	var am = parseInt($(this).html());
+		// 	if(!isNaN(am))
+		// 		tm += am;
+		// });
 		$("#amountDueInput").val(tm);
 	}
 

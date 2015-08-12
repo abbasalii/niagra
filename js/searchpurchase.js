@@ -3,7 +3,7 @@ ACC_REQ_TYPE_BILL = 2;
 
 
 
-Biller = new function(){
+PFinder = new function(){
 
 	var records = null;
 	var cities = null;
@@ -14,7 +14,7 @@ Biller = new function(){
 
 	this.init = function(){
 
-		console.log("Initializing bill record...");
+		console.log("Initializing purchase finder...");
 		this.getCities();
 		this.getAccounts();
 	}
@@ -42,7 +42,7 @@ Biller = new function(){
 			text += "<option value='"+cities[i].ID+"''>"+cities[i].NAME+"</option>";
 			// $("#cityList").append("<option value='"+cities[i].NAME+"'/>");
 		}
-		$("#billCitySelect").html(text);
+		$("#purchaseCitySelect").html(text);
 	}
 
 	this.setAccounts = function(data){
@@ -78,11 +78,11 @@ Biller = new function(){
 		}
 	}
 
-	this.searchBillRecords = function(){
+	this.searchPurchaseRecords = function(){
 
-		var cid = parseInt($("#billCitySelect").val());
-		var acc = $("#searchBillBar").val().trim().toUpperCase();
-		var bdate = $("#beginBillDate").val();
+		var cid = parseInt($("#purchaseCitySelect").val());
+		var acc = $("#searchPurchaseBar").val().trim().toUpperCase();
+		var bdate = $("#beginPurchaseDate").val();
 		if(bdate.length==0){
 			console.log("begin date not specified");
 			bdate = new Date("1970-01-01");
@@ -92,7 +92,7 @@ Biller = new function(){
 		}
 		bdate = Format.toSqlDate(bdate) + " 00-00-00";
 
-		var edate = $("#endBillDate").val();
+		var edate = $("#endPurchaseDate").val();
 		if(edate.length==0){
 			console.log("end date not specified");
 			edate = new Date();
@@ -102,18 +102,18 @@ Biller = new function(){
 		}
 		edate = Format.toSqlDate(edate) + " 23-59-59";
 
-		var min = parseInt($("#minBillAmount").val());
+		var min = parseInt($("#minPurchaseAmount").val());
 		if(isNaN(min)){
 			min = 0;
 			console.log("Minimum amount not specified. Default is "+min);
 		}
-		var max = parseInt($("#maxBillAmount").val());
+		var max = parseInt($("#maxPurchaseAmount").val());
 		if(isNaN(max)){
 			max = 9999999;
 			console.log("Maximum amount not specified. Default is "+max);
 		}
 
-		var billRequest = {
+		var purchaseRequest = {
 			TITLE: acc,
 			CITY_ID: cid,
 			B_DATE: bdate,
@@ -122,14 +122,14 @@ Biller = new function(){
 			MAX: max
 		};
 
-		Socket.searchBillRecords(billRequest);
+		Socket.searchPurchaseRecords(purchaseRequest);
 	}
 
 	this.setRecords = function(data){
 
 		records = data;
 
-		var text = "<table id='billRecordsTable'>";
+		var text = "<table id='purchaseRecordsTable'>";
 		text += "<tr>";
 		text += "<th>NO</th>";
 		text += "<th>DATE</th>";
@@ -142,7 +142,7 @@ Biller = new function(){
 		for(var i=0; i<data.length; i++){
 			text += "<tr>";
 			text += "<td>" + (i+1) + "</td>";
-			var bdate = new Date(data[i].B_DATE);
+			var bdate = new Date(data[i].I_DATE);
 			text += "<td>" + bdate.toDateString() + "</td>";
 			text += "<td>" + Format.formatTime(bdate) + "</td>";
 			for(var j=0; j<accounts.length; j++)
@@ -151,35 +151,35 @@ Biller = new function(){
 					break;
 				}
 
-			text += "<td>" + new Number(data[i].AMOUNT_DUE).toLocaleString("hi-IN") + "</td>";
-			text += "<td><input class='bill-detail-btn' type='button' value='Details'/></td>";
+			text += "<td>" + new Number(data[i].PAYABLE).toLocaleString("hi-IN") + "</td>";
+			text += "<td><input class='purchase-detail-btn' type='button' value='Details'/></td>";
 			text += "</tr>";
 		}
 		text += "</table>";
-		$("#billRecordsDiv").html(text);
+		$("#purchaseRecordsDiv").html(text);
 
-		$(".bill-detail-btn").each(function(){
+		$(".purchase-detail-btn").each(function(){
 			$(this).click(function(){
 				var ind = $(this).closest('tr').index()-1;
 				var id = records[ind].ID;
-				Biller.getBillDetails(id);
+				PFinder.getPurchaseDetails(id);
 			});
 		});
 	}
 
-	this.getBillDetails = function(_id){
+	this.getPurchaseDetails = function(_id){
 
 		b_id = _id;
 		info = null;
-		Socket.getBillDetails(_id);
+		Socket.getPurchaseDetails(_id);
 	}
 
-	this.setBillInfo = function(data){
+	this.setPurchaseInfo = function(data){
 
 		info = data[0];
 	}
 
-	this.setBillDetails = function(data){
+	this.setPurchaseDetails = function(data){
 
 		if(data.length==0){
 			console.log("No record found");
@@ -189,28 +189,25 @@ Biller = new function(){
 		itemList = data;
 
 		if(info == null){
-			setTimeout(this.setBillDetails,100,data);
+			setTimeout(this.setPurchaseDetails,100,data);
 			return;
 		}
 
-		var text = "<div id='billDetailHeader'>";
+		var text = "<div id='purchaseDetailHeader'>";
 		text += "<div>Title: " + info.TITLE + "</div>";
-		var bdate = new Date(info.B_DATE);
+		var bdate = new Date(info.I_DATE);
 		text += "<div>Date: " + bdate.toDateString() + "</div>";
 		text += "<div>Time: " + Format.formatTime(bdate) + "</div>";
-		text += "<div>Gross Total: " + Format.formatCurrency(info.AMOUNT_DUE) + "</div>";
-		text += "<div>Discount: " + info.DISCOUNT + "</div>";
-		text += "<div>Net Total: " + Format.formatCurrency(info.AMOUNT_DUE-info.DISCOUNT) + "</div>";
-		text += "<div>Amount Paid: " + Format.formatCurrency(info.AMOUNT_PAID) + "</div>";
+		text += "<div>Gross Total: " + Format.formatCurrency(info.PAYABLE) + "</div>";
 		text += "</div>";
 
-		text += "<table id='billDetailsTable'>";
+		text += "<table id='purchaseDetailsTable'>";
 		text += "<tr>";
 		text += "<th>NO</th>";
 		text += "<th>NAME</th>";
 		text += "<th>COST</th>";
 		text += "<th>QUANTITY</th>";
-		text += "<th>PAYABLE</th>";
+		text += "<th>TOTAL</th>";
 		text += "<th>AMOUNT</th>";
 		text += "<th>RETURN</th>";
 		text += "</tr>";
@@ -220,52 +217,52 @@ Biller = new function(){
 			text += "<td>" + (i+1) + "</td>";
 			text += "<td>" + data[i].NAME + "</td>";
 			text += "<td>" + Format.formatCurrency(data[i].COST) + "</td>";
-			text += "<td> <input class='bill-detail-qty' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
+			text += "<td> <input class='purchase-detail-qty' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
 			text += "<td>" + Format.formatCurrency(parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
-			text += "<td class='bill-detail-return-amount'></td>";
-			text += "<td> <input class='bill-detail-return-box' type='checkbox'/> </td>";
+			text += "<td class='purchase-detail-return-amount'></td>";
+			text += "<td> <input class='purchase-detail-return-box' type='checkbox'/> </td>";
 			text += "</tr>";
 		}
 		text += "</table>";
 		text += "<div id='itemReturnTotalDiv'>Total: <span id='itemReturnTotalSpan'>0</span></div>";
 		text += "<div id='itemReturnDetailDiv'><label>Details<input type='text' placeholder='Return on Bill'/></label></div>";
 		text += "<input id='returnItemBtn' type='button' value='Return'/>";
-		$("#billDetailDiv").html(text);
+		$("#purchaseDetailDiv").html(text);
 
-		$("#billDetailsTable input.bill-detail-return-box").each(function(){
+		$("#purchaseDetailsTable input.purchase-detail-return-box").each(function(){
 
 			$(this).click(function(){
 				var n = $(this).closest('tr').index()-1;
 				if($(this).prop('checked')){
-					$("#billDetailsTable input.bill-detail-qty").eq(n).prop('readonly',false);
-					Biller.calculateAmount(n);
-					$("#billDetailsTable input.bill-detail-qty").eq(n).change(function(){
-						Biller.calculateAmount(n);
+					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).prop('readonly',false);
+					PFinder.calculateAmount(n);
+					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).change(function(){
+						PFinder.calculateAmount(n);
 					});
 				}
 				else{
-					$("#billDetailsTable input.bill-detail-qty").eq(n).val(itemList[n].QUANTITY);
-					$("#billDetailsTable input.bill-detail-qty").eq(n).prop('readonly',true);
-					$("#billDetailsTable .bill-detail-return-amount").eq(n).html("");
-					$("#billDetailsTable input.bill-detail-qty").eq(n).unbind("change");
-					Biller.calculateTotal();
+					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val(itemList[n].QUANTITY);
+					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).prop('readonly',true);
+					$("#purchaseDetailsTable .purchase-detail-return-amount").eq(n).html("");
+					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).unbind("change");
+					PFinder.calculateTotal();
 				}
 			});
 		});
 
-		Biller.hideExtraColumns();
+		PFinder.hideExtraColumns();
 
 		$("#returnItemBtn").click(function(){
 
 			console.log("Return items button clicked");
 
-			Biller.showExtraColumns();
+			PFinder.showExtraColumns();
 			$(this).unbind("click");
 			$(this).val("Proceed");
 			$(this).click(function(){
 				console.log("Proceed button clicked");
-				if(Biller.validateData()){
-					Biller.returnItems();
+				if(PFinder.validateData()){
+					PFinder.returnItems();
 				}
 			});
 		});
@@ -273,55 +270,53 @@ Biller = new function(){
 
 	this.showExtraColumns = function(){
 		for(var i=6; i<8; i++)
-			$('#billDetailsTable td:nth-child('+i+'),#billDetailsTable th:nth-child('+i+')').show();
+			$('#purchaseDetailsTable td:nth-child('+i+'),#purchaseDetailsTable th:nth-child('+i+')').show();
 		$("#itemReturnTotalDiv").show();
 		$("#itemReturnDetailDiv").show();
-		$("#itemReturnDetailDiv input").eq(0).val("Return on Bill No. "+ b_id);
+		$("#itemReturnDetailDiv input").eq(0).val("Return on Invoice No. "+ b_id);
 	}
 
 	this.hideExtraColumns = function(){
 		for(var i=6; i<8; i++)
-			$('#billDetailsTable td:nth-child('+i+'),#billDetailsTable th:nth-child('+i+')').hide();
+			$('#purchaseDetailsTable td:nth-child('+i+'),#purchaseDetailsTable th:nth-child('+i+')').hide();
 		$("#itemReturnTotalDiv").hide();
 		$("#itemReturnDetailDiv").hide();
 	}
 
 	this.calculateAmount = function(n){
 
-		var qty = parseInt($("#billDetailsTable input.bill-detail-qty").eq(n).val());
+		var qty = parseInt($("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val());
 		if(qty<1){
-			$("#billDetailsTable input.bill-detail-qty").eq(n).val(1);
+			$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val(1);
 			qty=1;
 		}
 		if(qty>itemList[n].QUANTITY){
-			$("#billDetailsTable input.bill-detail-qty").eq(n).val(itemList[n].QUANTITY);
+			$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val(itemList[n].QUANTITY);
 			qty=itemList[n].QUANTITY;
 		}
-		if(!isNaN(qty)){
-			var am = Format.formatCurrency(qty*itemList[n].COST);
-			$("#billDetailsTable .bill-detail-return-amount").eq(n).html(am);
-		}
+		if(!isNaN(qty))
+			$("#purchaseDetailsTable .purchase-detail-return-amount").eq(n).html(qty*itemList[n].COST);
 
-		Biller.calculateTotal();
+		PFinder.calculateTotal();
 	}
 
 	this.calculateTotal = function(){
 
 		var total = 0;
-		$("#billDetailsTable input:checked").each(function(){
+		$("#purchaseDetailsTable input:checked").each(function(){
 
 			var ind = $(this).closest('tr').index()-1;
-			var q = parseInt($("#billDetailsTable input.bill-detail-qty").eq(ind).val());
+			var q = parseInt($("#purchaseDetailsTable input.purchase-detail-qty").eq(ind).val());
 			var p = q*itemList[ind].COST;
 			total += p;
 		});
-		$("#itemReturnTotalSpan").html(Format.formatCurrency(total));
+		$("#itemReturnTotalSpan").html(total);
 	}
 
 	this.validateData = function(){
 
 		console.log("Validating data");
-		var l = $("#billDetailsTable input:checked").length;
+		var l = $("#purchaseDetailsTable input:checked").length;
 		if(l==0){
 			console.log("No item selected");
 			return false;
@@ -334,17 +329,17 @@ Biller = new function(){
 		console.log("Creating list of items to be returned");
 
 		var data = {};
-		data['BILL_ID'] = b_id;
+		data['INVOICE_ID'] = b_id;
 		data['AMOUNT'] = parseInt($("#itemReturnTotalSpan").html());
 		var l_id = [];
-		$("#billDetailsTable input:checked").each(function(){
+		$("#purchaseDetailsTable input:checked").each(function(){
 			var n = $(this).closest('tr').index()-1;
-			var qty = $("#billDetailsTable input.bill-detail-qty").eq(n).val();
-			l_id.push({SALE_ID:itemList[n].ID,QUANTITY:qty});
+			var qty = $("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val();
+			l_id.push({PURCHASE_ID:itemList[n].ID,QUANTITY:qty});
 		});
-		data['SALES'] = l_id;
-
-		Socket.createReturn(data);
+		data['PURCHASES'] = l_id;
+// console.log(data);
+		Socket.purchaseReturn(data);
 	}
 
 	this.proceedToTransaction = function(){
@@ -357,7 +352,7 @@ Biller = new function(){
 				break;
 			}
 
-		var d = 0;
+		var d = -2;
 		var c = parseInt($("#itemReturnTotalSpan").html());
 		var t = $("#itemReturnDetailDiv input").eq(0).val();
 		location.href = "/trans.html?a="+acc_id+"&d="+d+"&c="+c+"&b="+(-1)+"&t="+t;
@@ -368,22 +363,22 @@ Biller = new function(){
 
 $(function() {
 
-	Biller.init();
+	PFinder.init();
 
-	$("#billCitySelect").change(function(){
-		Biller.searchAccounts($(this).val());
+	$("#purchaseCitySelect").change(function(){
+		PFinder.searchAccounts($(this).val());
 	});
 
-	$("#viewBillBtn").click(function(){
-		var id = parseInt($("#billNumInput").val());
+	$("#viewPurchaseBtn").click(function(){
+		var id = parseInt($("#purchaseNumInput").val());
 		if(isNaN(id) || id<=0){
-			console.log("Invalid bill number");
+			console.log("Invalid invoice number");
 			return;
 		}
-		Biller.getBillDetails(id);
+		PFinder.getPurchaseDetails(id);
 	});
 
-	$("#searchBillBtn").click(function(){
-		Biller.searchBillRecords();
+	$("#searchPurchaseBtn").click(function(){
+		PFinder.searchPurchaseRecords();
 	});
 });

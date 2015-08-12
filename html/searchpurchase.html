@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Niagra Sports - Search Purchase Record</title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="Socket.js"></script>
+	<script type="text/javascript" src="searchpurchase.js"></script>
+	<script type="text/javascript" src="Format.js"></script>
+	<link rel="stylesheet" type="text/css" href="default.css">
+	<style type="text/css">
+		.bill-detail-btn{
+
+		}
+	</style>
+</head>
+<body>
+	<div id="purchaseSearchDiv">
+		<div id="searchByNumber">
+			<input id="purchaseNumInput" type="number" min="1" placeholder="Invoice number"/>
+			<input id="viewPurchaseBtn" type="button" value="View"/>
+		</div>
+		<div id="searchByFilters">
+			<select id="purchaseCitySelect"></select>
+			<input id="searchPurchaseBar" type="text" placeholder="Account Title" list="accList"/>
+			<input id="beginPurchaseDate" type="date"/>
+			<input id="endPurchaseDate" type="date"/>
+			<input id="minPurchaseAmount" type="number" min="0" placeholder="Minimum Amount"/>
+			<input id="maxPurchaseAmount" type="number" min="0" placeholder="Maximum Amount"/>
+			<input id="searchPurchaseBtn" type="button" value="Search"/>
+		</div>
+	</div>
+	<div id="purchaseRecordsDiv"></div>
+	<div id="purchaseDetailDiv"></div>
+	<datalist id="accList"></datalist>
+</body>
+</html>

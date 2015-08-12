@@ -36,6 +36,17 @@ BILL_RESPONSE = 'bill_response';
 BILL_DETAILS = 'bill_details';
 BILL_DETAIL_RESPONSE = 'bill_detail_response';
 BILL_INFO = 'bill_info';
+RETURN_ITEM_LIST = 'return_item_list';
+NEW_RETURN_SUCCESS = 'new_return_success';
+NEW_PURCHASE = 'new_purchase';
+PURCHASE_SUCCESS = 'purchase_success';
+PURCHASE_SEARCH = 'purchase_search';
+PURCHASE_RESPONSE = 'purchase_reponse';
+PURCHASE_DETAILS = 'purchase_details';
+PURCHASE_DETAILS_RESPONSE = 'purchase_details_response';
+PURCHASE_INFO = 'purchase_info';
+PURCHASE_RETURN_LIST = 'purchase_return_list';
+PURCHASE_RETURN_SUCCESS = 'purchase_return_success';
 
 
 Socket = new function(){
@@ -97,6 +108,10 @@ Socket = new function(){
 				NewBill.setAccounts(JSON.parse(data));
 			else if(typeof(Biller)=='object')
 				Biller.setAccounts(JSON.parse(data));
+			else if(typeof(Purchaser)=='object')
+				Purchaser.setAccounts(JSON.parse(data));
+			else if(typeof(PFinder)=='object')
+				PFinder.setAccounts(JSON.parse(data));
 		});
 
 		socket.on(ACCOUNT_DETAIL_RESPONSE,function(data){
@@ -112,6 +127,8 @@ Socket = new function(){
 				Trans.setCities(JSON.parse(data));
 			else if(typeof(Biller)=='object')
 				Biller.setCities(JSON.parse(data));
+			else if(typeof(PFinder)=='object')
+				PFinder.setCities(JSON.parse(data));
 		});
 
 		socket.on(ACCOUNT_UPDATE_SUCCESS,function(){
@@ -133,7 +150,10 @@ Socket = new function(){
 
 		socket.on(ITEM_LIST_RESPONSE,function(data){
 			console.log("Received list of items");
-			NewBill.setItemList(JSON.parse(data));
+			if(typeof(NewBill)=='object')
+				NewBill.setItemList(JSON.parse(data));
+			else if(typeof(Purchaser)=='object')
+				Purchaser.setItemList(JSON.parse(data));
 		});
 
 		socket.on(NEW_BILL_SUCCESS,function(data){
@@ -154,6 +174,36 @@ Socket = new function(){
 		socket.on(BILL_INFO,function(data){
 			console.log("Received bill info");
 			Biller.setBillInfo(JSON.parse(data));
+		});
+
+		socket.on(NEW_RETURN_SUCCESS,function(){
+			console.log("Returns successfully inserted");
+			Biller.proceedToTransaction();
+		});
+
+		socket.on(PURCHASE_SUCCESS,function(data){
+			console.log("Purchase successfully completed");
+			Purchaser.proceedToTransaction(data.id);
+		});
+
+		socket.on(PURCHASE_RESPONSE,function(data){
+			console.log("Received purchase records");
+			PFinder.setRecords(JSON.parse(data));
+		});
+
+		socket.on(PURCHASE_DETAILS_RESPONSE,function(data){
+			console.log("Received purchase details");
+			PFinder.setPurchaseDetails(JSON.parse(data));
+		});
+
+		socket.on(PURCHASE_INFO,function(data){
+			console.log("Received purchase info");
+			PFinder.setPurchaseInfo(JSON.parse(data));
+		});
+
+		socket.on(PURCHASE_RETURN_SUCCESS,function(){
+			console.log("Purchase successfully returned");
+			PFinder.proceedToTransaction();
 		});
 	}
 
@@ -234,6 +284,31 @@ Socket = new function(){
 	this.getBillDetails = function(_id){
 		console.log("Requesting bill details for id: "+_id);
 		socket.emit(BILL_DETAILS,{id:_id});
+	}
+
+	this.createReturn = function(data){
+		console.log("Sending return item details");
+		socket.emit(RETURN_ITEM_LIST,data);
+	}
+
+	this.createPurchase = function(data){
+		console.log("Sending new purchase details");
+		socket.emit(NEW_PURCHASE,JSON.stringify(data));
+	}
+
+	this.searchPurchaseRecords = function(data){
+		console.log("Sending purchase records search query");
+		socket.emit(PURCHASE_SEARCH,data);
+	}
+
+	this.getPurchaseDetails = function(_id){
+		console.log("Requesting purchase details for id: "+_id);
+		socket.emit(PURCHASE_DETAILS,{id:_id});
+	}
+
+	this.purchaseReturn = function(data){
+		console.log("Sending purchase return item details");
+		socket.emit(PURCHASE_RETURN_LIST,data);
 	}
 }
 

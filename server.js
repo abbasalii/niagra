@@ -34,6 +34,17 @@ BILL_RESPONSE = 'bill_response';
 BILL_DETAILS = 'bill_details';
 BILL_DETAIL_RESPONSE = 'bill_detail_response';
 BILL_INFO = 'bill_info';
+RETURN_ITEM_LIST = 'return_item_list';
+NEW_RETURN_SUCCESS = 'new_return_success';
+NEW_PURCHASE = 'new_purchase';
+PURCHASE_SUCCESS = 'purchase_success';
+PURCHASE_SEARCH = 'purchase_search';
+PURCHASE_RESPONSE = 'purchase_reponse';
+PURCHASE_DETAILS = 'purchase_details';
+PURCHASE_DETAILS_RESPONSE = 'purchase_details_response';
+PURCHASE_INFO = 'purchase_info';
+PURCHASE_RETURN_LIST = 'purchase_return_list';
+PURCHASE_RETURN_SUCCESS = 'purchase_return_success';
 
 
 ACC_REQ_TYPE_TRANS = 1;
@@ -865,7 +876,7 @@ var getBillDetails = function(id,socket){
 			return;
 		}  
 
-		var query = 'SELECT ITEM.NAME, SALE.COST, SALE.QUANTITY from SALE'
+		var query = 'SELECT SALE.ID, ITEM.NAME, SALE.COST, SALE.QUANTITY from SALE'
 					+ ' INNER JOIN ITEM'
 					+ ' ON SALE.ITEM_ID=ITEM.ID'
 					+ ' WHERE SALE.BILL_ID=?';
@@ -880,6 +891,296 @@ var getBillDetails = function(id,socket){
 				console.log("Sending bill details");
 				socket.emit(BILL_DETAIL_RESPONSE,JSON.stringify(rows));
 				return;
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var returnItems = function(data,socket){
+
+	var sales = data.SALES;
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		connection.query('INSERT INTO RETURN_IN (R_DATE,BILL_ID,AMOUNT) VALUES (NOW(),?,?)',
+		[data.BILL_ID,data.AMOUNT],
+		function(err,rows,fields){
+			if(err){
+				console.log("Failed to create new return");
+				connection.release();
+			}
+			else{
+				var r_id = rows.insertId;
+				console.log("New return successfully created with ID: "+rows.insertId);
+
+				var query = 'INSERT INTO RETURN_ITEM (RETURN_ID,SALE_ID,QUANTITY) VALUES (?,?,?)';
+				var values = [r_id,sales[0].SALE_ID,sales[0].QUANTITY];
+				for(var i=1; i<sales.length; i++){
+					query += ',(?,?,?)';
+					values.push(r_id);
+					values.push(sales[i].SALE_ID);
+					values.push(sales[i].QUANTITY);
+				}
+				connection.query(query, values,
+				function(err,rows,fields){
+					if(err){
+						console.log("Failed to insert return items");
+					}
+					else{
+						console.log("Returns successfully inserted");
+						socket.emit(NEW_RETURN_SUCCESS);
+					}
+					connection.release();
+				});
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var createNewPurchase = function(data,socket){
+
+
+	var purchase = data.PURCHASE;
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		connection.query('INSERT INTO INVOICE (I_DATE,ACCOUNT_ID,PAYABLE) VALUES (NOW(),?,?)',
+		[data.ACCOUNT_ID,data.AMOUNT],
+		function(err,rows,fields){
+			if(err){
+				console.log("Failed to create new invoice");
+				connection.release();
+			}
+			else{
+				var i_id = rows.insertId;
+				console.log("New purchase successfully created with ID: "+i_id);
+
+				var query = 'INSERT INTO PURCHASE (ITEM_ID,COST,QUANTITY,INVOICE_ID) VALUES (?,?,?,?)';
+				var values = [purchase[0].ITEM_ID,purchase[0].COST,purchase[0].QUANTITY,i_id];
+				for(var i=1; i<purchase.length; i++){
+					query += ',(?,?,?,?)';
+					values.push(purchase[i].ITEM_ID);
+					values.push(purchase[i].COST);
+					values.push(purchase[i].QUANTITY);
+					values.push(i_id);
+				}
+				connection.query(query, values,
+				function(err,rows,fields){
+					if(err){
+						console.log("Failed to insert new purchases");
+					}
+					else{
+						console.log("Purchases successfully inserted");
+						socket.emit(PURCHASE_SUCCESS,{id:i_id});
+					}
+					connection.release();
+				});
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var searchPurchaseRecords = function(data,socket){
+
+	var query = 'SELECT * from INVOICE WHERE I_DATE>=? AND I_DATE<=? AND PAYABLE>=? AND PAYABLE<=?';
+	var values = [data.B_DATE,data.E_DATE,data.MIN,data.MAX];
+	if(data.CITY_ID>-1){
+
+		if(data.TITLE.length>0)
+		{
+			console.log("Both city and title");
+			query += ' AND ACCOUNT_ID IN ('+
+						'SELECT ID FROM ACCOUNT WHERE CITY_ID=? AND TITLE LIKE "%'+data.TITLE+'%"'
+				+')';
+			values.push(data.CITY_ID);
+			// values.push(data.TITLE);
+		}
+		else{
+			console.log("city only");
+			query += ' AND ACCOUNT_ID IN ('+
+						'SELECT ID FROM ACCOUNT WHERE CITY_ID=?'
+				+')';
+			values.push(data.CITY_ID);
+		}
+	}
+	else if(data.TITLE.length>0){
+
+		console.log("title only");
+		query += ' AND ACCOUNT_ID IN ('+
+					'SELECT ID FROM ACCOUNT WHERE TITLE LIKE "%'+data.TITLE+'%"'
+			+')';
+		// values.push(data.TITLE);
+	}
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		connection.query(query, values, function(err, rows, fields) {
+
+			if (err){
+				socket.emit(QUERY_ERROR);
+				console.log("Failed to fetch purchase records");
+			}
+			else{
+				console.log("Sending purchase records");
+				socket.emit(PURCHASE_RESPONSE,JSON.stringify(rows));
+			}
+			connection.release();
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var getPurchaseInfo = function(id,socket){
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		var query = 'SELECT ACCOUNT.TITLE, INVOICE.I_DATE, INVOICE.PAYABLE from INVOICE'
+					+ ' INNER JOIN ACCOUNT'
+					+ ' ON INVOICE.ACCOUNT_ID=ACCOUNT.ID'
+					+ ' WHERE INVOICE.ID=?';
+		connection.query(query,[id], function(err, rows, fields) {
+			connection.release();
+			if (err){
+				socket.emit(QUERY_ERROR);
+				console.log("Failed to fetch purchase info");
+				return;
+			}
+			else{
+				console.log("Sending purchase info");
+				socket.emit(PURCHASE_INFO,JSON.stringify(rows));
+				return;
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var getPurchaseDetails = function(id,socket){
+
+	getPurchaseInfo(id,socket);
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		var query = 'SELECT PURCHASE.ID, ITEM.NAME, PURCHASE.COST, PURCHASE.QUANTITY from PURCHASE'
+					+ ' INNER JOIN ITEM'
+					+ ' ON PURCHASE.ITEM_ID=ITEM.ID'
+					+ ' WHERE PURCHASE.INVOICE_ID=?';
+		connection.query(query,[id], function(err, rows, fields) {
+			connection.release();
+			if (err){
+				socket.emit(QUERY_ERROR);
+				console.log("Failed to fetch purchase details");
+				return;
+			}
+			else{
+				console.log("Sending purchase details");
+				socket.emit(PURCHASE_DETAILS_RESPONSE,JSON.stringify(rows));
+				return;
+			}
+		});
+
+		connection.on('error', function(err) {
+			console.log("Error occurred while performing database operation");
+			return;     
+        });
+	});
+}
+
+var returnPurchase = function(data,socket){
+
+	var purchase = data.PURCHASES;
+
+	pool.getConnection(function(err,connection){
+		if (err) {
+			connection.release();
+			socket.emit(DATABASE_ERROR);
+			console.log("Failed to connect to the database");
+			return;
+		}  
+
+		connection.query('INSERT INTO RETURN_OUT (R_DATE,INVOICE_ID,AMOUNT) VALUES (NOW(),?,?)',
+		[data.INVOICE_ID,data.AMOUNT],
+		function(err,rows,fields){
+			if(err){
+				console.log("Failed to create new return out");
+				connection.release();
+			}
+			else{
+				var r_id = rows.insertId;
+				console.log("New return purchase successfully created with ID: "+rows.insertId);
+
+				var query = 'INSERT INTO RETURN_STOCK (RETURN_ID,PURCHASE_ID,QUANTITY) VALUES (?,?,?)';
+				var values = [r_id,purchase[0].PURCHASE_ID,purchase[0].QUANTITY];
+				for(var i=1; i<purchase.length; i++){
+					query += ',(?,?,?)';
+					values.push(r_id);
+					values.push(purchase[i].PURCHASE_ID);
+					values.push(purchase[i].QUANTITY);
+				}
+				connection.query(query, values,
+				function(err,rows,fields){
+					if(err){
+						console.log("Failed to insert purchase return items");
+					}
+					else{
+						console.log("Purchase returns successfully inserted");
+						socket.emit(PURCHASE_RETURN_SUCCESS);
+					}
+					connection.release();
+				});
 			}
 		});
 
@@ -981,6 +1282,31 @@ io.sockets.on('connection', function (socket) {
 	socket.on(BILL_DETAILS,function(data){
 		console.log('Client has requested bill details for bill # '+data.id);
 		getBillDetails(data.id,socket);
+	});
+
+	socket.on(RETURN_ITEM_LIST,function(data){
+		console.log('Client has sent return item list');
+		returnItems(data,socket);
+	});
+
+	socket.on(NEW_PURCHASE,function(data){
+		console.log('Client has sent new purchase details');
+		createNewPurchase(JSON.parse(data),socket);
+	});
+
+	socket.on(PURCHASE_SEARCH,function(data){
+		console.log('Client has sent purchase search query');
+		searchPurchaseRecords(data,socket);
+	});
+
+	socket.on(PURCHASE_DETAILS,function(data){
+		console.log('Client has requested purchase details for bill # '+data.id);
+		getPurchaseDetails(data.id,socket);
+	});
+
+	socket.on(PURCHASE_RETURN_LIST,function(data){
+		console.log('Client has sent purchase return list');
+		returnPurchase(data,socket);
 	});
 });
 

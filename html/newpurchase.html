@@ -2,25 +2,23 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Niagra Sports - Create New Bill</title>
+	<title>Niagra Sports - Record New Purchase</title>
 	<script type="text/javascript" src="jquery.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="Socket.js"></script>
 	<script type="text/javascript" src="Format.js"></script>
-	<script type="text/javascript" src="newbill.js"></script>
+	<script type="text/javascript" src="newpurchase.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
 </head>
 <body>
-	<div id="newBillSumDiv">
-		<select id="newBillAccSel"></select>
-		<label>Amount Due:<input id="amountDueInput" type="number" readonly/></label>
-		<label>Discount:<input id="dicountInput" type="number"/></label>
-		<label>Amount Paid:<input id="amountPaidInput" type="number"/></label>
-		<label>Payment Details:<input id="paymentDetailsInput" type="text" value="Paid in Cash" /></label>
-		<input id="newBillFinBtn" type="button" value="Finish"/>
+	<div id="newPurSumDiv">
+		<select id="newPurAccSel"></select>
+		<label>Net Payable:<input id="newPayableInput" type="number" value="0" readonly/></label>
+		<label>Purchase Details:<input id="purchaseDetailsInput" type="text" placeholder="" /></label>
+		<input id="newPurFinBtn" type="button" value="Finish"/>
 	</div>
-	<div id="billItemDiv">
-		<table id="billItemTab">
+	<div id="purItemDiv">
+		<table id="purItemTab">
 			<tr>
 				<th>No.</th>
 				<th>ITEM NAME</th>
