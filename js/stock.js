@@ -14,11 +14,11 @@ Stock = new function(){
 	this.displayStock = function(data){
 
 		if(categories==null){
-			setTimeout(this.displayStock,33,data);
+			setTimeout(this.displayStock,333,data);
 			return;
 		}
 		result = data;
-		var text = "<table id='stockTable'>";
+		var text = "<table id='stock-table' class='table-default'>";
 		text += "<tr>";
 		text += "<th>No.</th>";
 		text += "<th>NAME</th>";
@@ -30,17 +30,17 @@ Stock = new function(){
 
 		for(var i=0; i<data.length; i++){
 			text += "<tr>";
-			text += "<td>" + (i+1) + "</td>";
-			text += "<td><input class='edit-name-field' type='text' value='" + data[i].NAME + "' readonly/></td>";
+			text += "<td class='serial-number-column'>" + (i+1) + "</td>";
+			text += "<td><input class='input-borderless' type='text' value='" + data[i].NAME + "' readonly/></td>";
 			for(var j=0; j<categories.length; j++)
 				if(data[i].CATEGORY_ID==categories[j].ID) {
-					text += "<td><input id='editStockCat' type='text' value='"
+					text += "<td><input class='input-borderless' id='editStockCat' type='text' value='"
 					 + categories[j].NAME + "' list='categories' readonly/></td>";
 					break;
 				}
-			text += "<td><input class='edit-price-field' type='number' min='0' value='" + data[i].PRICE + "' readonly/></td>";
-			text += "<td><input class='edit-stock-field' type='number' min='0' value='" + data[i].STOCK + "' readonly/></td>";
-			text += "<td><input class='edit-stock-btn' type='button' value='Edit'/></td>";
+			text += "<td><input class='input-num-borderless' type='number' min='0' value='" + data[i].PRICE + "' readonly/></td>";
+			text += "<td><input class='input-num-borderless' type='number' min='0' value='" + data[i].STOCK + "' readonly/></td>";
+			text += "<td class='edit-btn-align'><input class='edit-stock-btn' type='button' value='Edit'/></td>";
 			text += "</tr>";
 		}
 		text += "</table>";
@@ -54,6 +54,7 @@ Stock = new function(){
 				$(this).val('Save');
 				$(this).closest('tr').find('input').each(function(){
 					$(this).prop("readonly", false);
+					$(this).addClass("edit-stock-border");
 				});
 				$(this).click(function(){
 					console.log('Save button clicked');

@@ -8,20 +8,17 @@
 	<script type="text/javascript" src="Socket.js"></script>
 	<script type="text/javascript" src="stock.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
-	<style type="text/css">
-		#stockTable{
-
-		}
-		.edit-stock-btn{
-
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="stock.css">
 </head>
 <body>
+	<div id="header">
+		<div id="logo"></div>
+		<h1 id="heading">Niagra Sports Management System</h1>
+	</div>
 	<div id="searchStockDiv">
-		<input id="searchStockBar" type="text" placeholder="Search for Stock"/>
-		<select id="stockCategorySelect"></select>
-		<input id="searchStockBtn" type="button" value="Search"/>
+		<select class="form-control drop-down" id="stockCategorySelect"></select>
+		<input class="form-control" id="searchStockBar" type="text" placeholder="Search for Stock"/>
+		<input class="btn btn-primary" id="searchStockBtn" type="button" value="Search"/>
 	</div>
 	<div id="stockInsertDiv">
 		<input id="newStockName" type="text" placeholder="Name"/>
@@ -32,5 +29,9 @@
 		<input id="createStockBtn" type="button" value="Insert"/>
 	</div>
 	<div id="stockDataDiv"></div>
+	<div id="footer">
+		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
+		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
+	</div>
 </body>
 </html>

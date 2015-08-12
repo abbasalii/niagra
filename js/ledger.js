@@ -104,7 +104,7 @@ Ledger = new function(){
 			return;
 		}
 		result = data;
-		var text = "<table id='ledgerTable' >";
+		var text = "<table class='table-default' >";
 		text += "<tr>";
 		text += "<th>No.</th>";
 		text += "<th>TITLE</th>";
@@ -144,26 +144,47 @@ Ledger = new function(){
 	}
 
 	this.displayAccountDetail = function(){
-		text = "<form>";
-		text += "<div><label>TITLE<input type='text' value='" + details.TITLE + "' readonly/></label></div>";
+		text = "<h2>Account Details</h2>";
+		text += "<table id='ledger-detail-table'>";
+		text += "<tr>";
+		text += "<td><label>TITLE</label></td>";
+		text += "<td><input class='form-control' type='text' value='" + details.TITLE + "' readonly/></td>";
+		text += "</tr>";
 		for(var i=0; i<cities.length; i++)
 			if(cities[i].ID==details.CITY_ID){
-				text += "<div><label>CITY<input type='text' value='" + cities[i].NAME
-					+ "' list='cityList' readonly/></label></div>";
+				text += "<tr>";
+				text += "<td><label>CITY</label></td>";
+				text += "<td><input class='form-control' type='text' value='" + cities[i].NAME
+					+ "' list='cityList' readonly/></td>";
+				text += "</tr>";
 				break;
 			}
-		text += "<div><label>PTCL<input type='text' value='"+details.PTCL+"' readonly/></label></div>";
-		text += "<div><label>MOBILE<input type='text' value='"+details.CELL+"' readonly/></label></div>";
-		text += "<div><label>EXTRAS<input type='text' value='"+details.EXTRAS+"' readonly/></label></div>";
-		text += "<div><input id='ledger-edit-btn' type='button' value='Edit'/>"
-					+"<input id='ledger-dismiss-btn' type='button' value='Dismiss'/></div>";
-		text += "</form>";
+		text += "<tr>";
+		text += "<td><label>PTCL</label></td>";
+		text += "<td><input class='form-control' type='text' value='"+details.PTCL+"' readonly/></td>";
+		text += "</tr>";
+		text += "<tr>";
+		text += "<td><label>MOBILE</label></td>";
+		text += "<td><input class='form-control' type='text' value='"+details.CELL+"' readonly/></td>";
+		text += "</tr>";
+		text += "<tr>";
+		text += "<td><label>EXTRAS</label></td>";
+		text += "<td><input class='form-control' type='text' value='"+details.EXTRAS+"' readonly/></td>";
+		text += "</tr>";
+		text += "<tr>";
+		text += "<td></td>";
+		text += "<td><input class='btn btn-primary' id='ledger-edit-btn' type='button' value='Edit'/></td>";
+		text += "</tr>";
+		text += "</table>";
 		$("#ledgerDetailDiv").html(text);
+		$("#ledger-detail-wrapper").show("slow");
 
 		$("#ledger-edit-btn").click(function(){
 			console.log("Edit button clicked");
 			$(this).unbind("click");
 			$(this).val("Save");
+			$(this).removeClass("btn-primary");
+			$(this).addClass("btn-success");
 			$("#ledgerDetailDiv").find('input').each(function(){
 				$(this).prop("readonly",false);
 			});
@@ -202,6 +223,7 @@ Ledger = new function(){
 		$("#ledger-dismiss-btn").click(function(){
 			console.log("Dismiss button clicked");
 			$("#ledgerDetailDiv").html("");
+			$("#ledger-detail-wrapper").hide("slow");
 		});
 	}
 
@@ -293,7 +315,7 @@ $(function() {
 		$("#new-account-wrapper").show("slow");
 	});
 
-	$("#cross-btn").click(function(){
+	$("#new-account-dissmiss-btn").click(function(){
 		console.log("Cross btn clicked");
 		$("#new-account-wrapper").hide("slow");
 	});

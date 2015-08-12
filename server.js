@@ -1200,7 +1200,7 @@ var pool 	=    mysql.createPool({
     connectionLimit : 100, //important
     host     : 'localhost',
     user     : 'root',
-    password : 'lionking',
+    password : '',
     database : 'niagra_sports',
     debug    :  false
 });

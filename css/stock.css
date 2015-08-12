@@ -1,0 +1,59 @@
+#stockInsertDiv {
+	display: none;
+}
+#searchStockDiv select {
+	width: 128px;
+}
+
+.input-borderless {
+	border: none;
+	/*font-size: 11pt;*/
+	font: inherit;
+	/*width: 100px;*/
+}
+
+.input-num-borderless{
+	border: none;
+	text-align: right;
+	/*font-size: 11pt;*/
+	font: inherit;
+	width: 80px;
+}
+
+.edit-stock-btn{
+	border: none;
+	background-color: rgba(0,0,0,0);
+	/*font-size: 11pt;*/
+	font-weight: bold;
+}
+
+.edit-stock-border{
+	border: 1px solid black;
+}
+
+.edit-stock-btn:hover{
+	cursor: pointer;
+}
+
+.serial-number-column{
+	/*font-size: 11pt;*/
+}
+
+.edit-btn-align{
+	text-align: center;
+}
+
+#stock-table{
+	width: 770px;
+}
+
+#stockDataDiv{
+	width: 780px;
+	margin: 0 auto;
+}
+
+#searchStockDiv{
+	width: 472px;
+	padding: 10px;
+	margin: 0 auto;
+}

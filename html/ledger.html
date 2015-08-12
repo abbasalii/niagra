@@ -17,8 +17,8 @@
 		<h1 id="heading">Niagra Sports Management System</h1>
 	</div>
 	<div id="searchLedgerDiv">
-		<select class="form-control" id="ledgerCitySelect"></select>
-		<select class="form-control" id="ledgerAccountTypeSelect">
+		<select class="form-control drop-down" id="ledgerCitySelect"></select>
+		<select class="form-control drop-down" id="ledgerAccountTypeSelect">
 			<option value='b'>Both</option>
 			<option value='c'>Creditors</option>
 			<option value='d'>Debtors</option>
@@ -28,7 +28,7 @@
 	</div>
 	<div id="new-account-wrapper">
 		<div id="new-account-container">
-			<input id="cross-btn" type="button" value="x"/>
+			<input class="cross-btn" id="new-account-dissmiss-btn" type="button" value="x"/>
 			<div id="newAccDiv">
 				<h2>Create New Account</h2>
 				<div class="form-group"><input class="form-control" id="newAccTitle" type="text" placeholder="Title"/></div>
@@ -47,7 +47,12 @@
 		<div id="ledgerDataDiv"></div>
 		<input id="showNewAccountBtn" type="image" src="profile.png">
 	</div>
-	<div id="ledgerDetailDiv"></div>
+	<div id="ledger-detail-wrapper">
+		<div id="ledger-detail-container">
+			<input class='cross-btn' id='ledger-dismiss-btn' type='button' value='x'>
+			<div id="ledgerDetailDiv"></div>
+		</div>
+	</div>
 	<div id="footer">
 		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
 		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
