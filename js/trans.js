@@ -129,11 +129,11 @@ Trans = new function(){
 
 		var text = "<table class='table-default'>";
 		text += "<tr>";
-		text += "<th class='trans-index-class'>No.</th>";
-		text += "<th>DATE</th>";
-		text += "<th>TIME</th>";
-		text += "<th>TITLE</th>";
-		text += "<th class='trans-amount-class'>AMOUNT</th>";
+		text += "<th class='index-column'>No.</th>";
+		text += "<th class='date-column'>DATE</th>";
+		text += "<th class='time-column'>TIME</th>";
+		text += "<th class='account-title-column'>TITLE</th>";
+		text += "<th class='item-total-column'>AMOUNT</th>";
 		text += "<th class='trans-desc-class'>DESCRIPTION</th>";
 		text += "</tr>";
 
@@ -144,16 +144,16 @@ Trans = new function(){
 			if((_t=="c" && transs[i].AMOUNT>0) || (_t=="d" && transs[i].AMOUNT<0))
 				continue;
 			text += "<tr>";
-			text += "<td class='trans-index-class'>" + k++ + "</td>";
+			text += "<td class='index-column'>" + k++ + "</td>";
 			var tdate = new Date(transs[i].T_DATE);
-			text += "<td>" + tdate.toDateString(); + "</td>";
-			text += "<td>" + this.formatTime(tdate) + "</td>";
+			text += "<td class='date-column'>" + tdate.toDateString(); + "</td>";
+			text += "<td class='time-column'>" + this.formatTime(tdate) + "</td>";
 			for(var j=0; j<accounts.length; j++)
 				if(accounts[j].ID==transs[i].ACCOUNT_ID){
-					text += "<td>" + accounts[j].TITLE + "</td>";
+					text += "<td class='account-title-column'>" + accounts[j].TITLE + "</td>";
 					break;
 				}
-			text += "<td class='trans-amount-class";
+			text += "<td class='item-total-column";
 			if(transs[i].AMOUNT>0)
 				text += " balance-positive-field";
 			else

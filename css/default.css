@@ -395,3 +395,34 @@ fieldset[disabled] .btn-success.active {
 .item-name-column{
   width: 224px;
 }
+
+.cross-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0);
+  border: none;
+  font-size: 18pt;
+  font-weight: bold;
+}
+
+.cross-btn:hover {
+  cursor: pointer;
+  background-color: #5E869E;
+  border-bottom-left-radius: 5px;
+  color: #fff;
+}
+
+.search-filter-table{
+  margin: 0 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.search-filter-table td{
+  padding-left: 10px;
+}
+
+.bold{
+  font-weight: bold;
+}

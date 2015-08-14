@@ -19,18 +19,48 @@
 	</div>
 	<div id="content">
 		<div id="searchTransDiv">
-			<select id="transCitySelect"></select>
-			<input id="searchTransBar" type="text" placeholder="Search" list="accList"/>
-			<select id="transactionTypeSelect">
+			<table class="search-filter-table">
+				<tr>
+					<td>City</td>
+					<td><select id="transCitySelect" class='form-control'></select></td>
+					<td rowspan="3">&nbsp;</td>
+					<td rowspan="3">&nbsp;</td>
+					<td>Account</td>
+					<td><input id="searchTransBar" class='form-control' type="text" placeholder="" list="accList"/></td>
+					<td>
+						<select id="transactionTypeSelect" class='form-control'>
+							<option value='b'>Both</option>
+							<option value='c'>Credit</option>
+							<option value='d'>Debit</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Start</td>
+					<td><input id="beginTransDate" class='form-control' type="date"/></td>
+					<td>End</td>
+					<td><input id="endTransDate" class='form-control' type="date"/></td>
+					<td class='search-btn-td' rowspan="2"><input id="searchTransBtn" type="button" value="Search"/></td>
+				</tr>
+				<tr>
+					<td>Min</td>
+					<td><input id="minTransAmount" class='form-control' type="number" min="0" placeholder="Minimum Amount"/></td>
+					<td>Max</td>
+					<td><input id="maxTransAmount" class='form-control' type="number" min="0" placeholder="Maximum Amount"/></td>
+				</tr>
+			</table>
+			<!-- <select id="transCitySelect"></select> -->
+			<!-- <input id="searchTransBar" type="text" placeholder="Search" list="accList"/> -->
+			<!-- <select id="transactionTypeSelect">
 				<option value='b'>Both</option>
 				<option value='c'>Credit</option>
 				<option value='d'>Debit</option>
-			</select>
-			<input id="beginTransDate" type="date"/>
-			<input id="endTransDate" type="date"/>
-			<input id="minTransAmount" type="number" min="0" placeholder="Minimum Amount"/>
-			<input id="maxTransAmount" type="number" min="0" placeholder="Maximum Amount"/>
-			<input id="searchTransBtn" type="button" value="Search"/>
+			</select> -->
+			<!-- <input id="beginTransDate" type="date"/> -->
+			<!-- <input id="endTransDate" type="date"/> -->
+			<!-- <input id="minTransAmount" type="number" min="0" placeholder="Minimum Amount"/> -->
+			<!-- <input id="maxTransAmount" type="number" min="0" placeholder="Maximum Amount"/> -->
+			<!-- <input id="searchTransBtn" type="button" value="Search"/> -->
 		</div>
 		<div id="new-trans-wrapper">
 			<div id="new-trans-container">
@@ -59,7 +89,7 @@
 			</div>
 		</div>
 		<div id="trans-content-wrapper">
-			<div id="transDataDiv"></div>
+			<div id="transDataDiv">&nbsp;</div>
 			<input id="showNewTransBtn" type="image" src="transaction.png">
 		</div>
 		<!-- <div id="transDataDiv"></div> -->

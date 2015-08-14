@@ -20,7 +20,7 @@
 }
 #showNewTransBtn{
 	position: relative;
-	float: left;
+	/*float: left;*/
 	left: 15px;
 	width: 200px;
 	height: 200px;
@@ -30,9 +30,9 @@
 	width: 240px;
 }
 
-.trans-index-class{
+/*.trans-index-class{
 	text-align: center;
-}
+}*/
 
 #new-trans-wrapper {
 	display: none;
@@ -67,7 +67,7 @@
 	/*text-align: center;*/
 }
 
-.cross-btn {
+/*.cross-btn {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -82,8 +82,28 @@
 	background-color: #5E869E;
 	border-bottom-left-radius: 5px;
 	color: #fff;
+}*/
+
+/*.trans-amount-class{
+	text-align: right;
+}*/
+
+
+.search-btn-td{
+	vertical-align: middle;
 }
 
-.trans-amount-class{
-	text-align: right;
+#searchTransBtn{
+	height: 60px;
+    width: 96px;
+    border-radius: 50px;
+    background-color: #F4F5F7;
+    border: none;
+    font-size: 12pt;
+    font-color: #fff;
+    outline: none;
+}
+
+#transactionTypeSelect{
+	width: 96px;
 }

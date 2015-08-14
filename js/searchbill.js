@@ -80,6 +80,16 @@ Biller = new function(){
 
 	this.searchBillRecords = function(){
 
+		var id = parseInt($("#billNumInput").val());
+		if(isNaN(id) || id<=0){
+			console.log("Invalid bill number");
+			// return;
+		}
+		else{
+			Biller.getBillDetails(id);
+			return;
+		}
+
 		var cid = parseInt($("#billCitySelect").val());
 		var acc = $("#searchBillBar").val().trim().toUpperCase();
 		var bdate = $("#beginBillDate").val();
@@ -129,7 +139,7 @@ Biller = new function(){
 
 		records = data;
 
-		var text = "<table class='table-default'>";
+		var text = "<table id='bill-record-table' class='table-default'>";
 		text += "<tr>";
 		text += "<th>No</th>";
 		text += "<th>DATE</th>";
@@ -194,15 +204,15 @@ Biller = new function(){
 		}
 
 		var text = "<div id='billDetailHeader'>";
-		text += "<table>";
-		text += "<tr><td>Title</td><td>" + info.TITLE + "</td></tr>";
+		text += "<table id='billDetailHeaderTab'>";
+		text += "<tr><td class='bold'>Title</td><td colspan='3'>" + info.TITLE + "</td></tr>";
 		var bdate = new Date(info.B_DATE);
-		text += "<tr><td>Date</td><td>" + bdate.toDateString() + "</td></tr>";
-		text += "<tr><td>Time</td><td>" + Format.formatTime(bdate) + "</td></tr>";
-		text += "<tr><td>Gross Total</td><td>" + Format.formatCurrency(info.AMOUNT_DUE) + "</td></tr>";
-		text += "<tr><td>Discount</td><td>" + info.DISCOUNT + "</td></tr>";
-		text += "<tr><td>Net Total</td><td>" + Format.formatCurrency(info.AMOUNT_DUE-info.DISCOUNT) + "</td></tr>";
-		text += "<tr><td>Amount Paid</td><td>" + Format.formatCurrency(info.AMOUNT_PAID) + "</td></tr>";
+		text += "<tr><td class='bold'>Date</td><td>" + bdate.toDateString() + "</td>";
+		text += "<td class='bold'>Time</td><td>" + Format.formatTime(bdate) + "</td></tr>";
+		text += "<tr><td class='bold'>Gross Total</td><td>" + Format.formatCurrency(info.AMOUNT_DUE) + "</td>";
+		text += "<td class='bold'>Discount</td><td>" + info.DISCOUNT + "</td></tr>";
+		text += "<tr><td class='bold'>Net Total</td><td>" + Format.formatCurrency(info.AMOUNT_DUE-info.DISCOUNT) + "</td>";
+		text += "<td class='bold'>Amount Paid</td><td>" + Format.formatCurrency(info.AMOUNT_PAID) + "</td></tr>";
 		text += "</table>";
 		text += "</div>";
 
@@ -273,6 +283,8 @@ Biller = new function(){
 				}
 			});
 		});
+
+		$("#billDetailWrapper").show("slow");
 	}
 
 	this.showExtraColumns = function(){
@@ -378,16 +390,20 @@ $(function() {
 		Biller.searchAccounts($(this).val());
 	});
 
-	$("#viewBillBtn").click(function(){
-		var id = parseInt($("#billNumInput").val());
-		if(isNaN(id) || id<=0){
-			console.log("Invalid bill number");
-			return;
-		}
-		Biller.getBillDetails(id);
-	});
+	// $("#viewBillBtn").click(function(){
+	// 	var id = parseInt($("#billNumInput").val());
+	// 	if(isNaN(id) || id<=0){
+	// 		console.log("Invalid bill number");
+	// 		return;
+	// 	}
+	// 	Biller.getBillDetails(id);
+	// });
 
 	$("#searchBillBtn").click(function(){
 		Biller.searchBillRecords();
+	});
+
+	$("#detail-dismiss-btn").click(function(){
+		$("#billDetailWrapper").hide("slow");
 	});
 });

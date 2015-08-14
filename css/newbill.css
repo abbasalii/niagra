@@ -38,3 +38,45 @@
 	width: 234px;
 	text-align: center;
 }
+
+#list-plus-sum-wrapper{
+	width: 1160px;
+	position: relative;
+	/*left: 50%;*/
+	margin-left: -580px;
+	/*text-align: center;*/
+	margin: 20px auto;
+	overflow: auto;
+}
+
+#billItemDiv{
+/*	display: inline-block;*/
+float: left;
+}
+
+#newBillSumDiv{
+/*	display: inline-block;*/
+	position: fixed;
+	margin-left: 800px;
+}
+
+#newBillSumTab{
+	/*border-collapse: collapse;*/
+	border: 2px solid #A8B3BD;
+	border-radius: 10px;
+}
+
+#newBillSumTab th,td {
+  border: 2px solid rgba(168,179,189,0.2);/*//#A8B3BD;*/
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.finish-btn-td{
+	text-align: right;
+	border: none;
+}
+
+#newBillFinBtn{
+	width: 40%;
+}

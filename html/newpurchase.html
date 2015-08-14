@@ -18,27 +18,6 @@
 		<h1 id="heading">Niagra Sports Management System</h1>
 	</div>
 	<div id="content">
-		<div id="newPurSumDiv">
-			<table id="newPurSumTab">
-				<tr>
-					<td>Account</td>
-					<td><select class="form-control" id="newPurAccSel"></select></td>
-				</tr>
-				<tr>
-					<td>Net Payable</td>
-					<td><input class="form-control" id="newPayableInput" type="number" value="0" readonly/></td>
-				</tr>
-				<tr>
-					<td>Details</td>
-					<td><input class="form-control" id="purchaseDetailsInput" type="text" placeholder=""/></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input class="btn btn-default" id="newPurFinBtn" type="button" value="Finish"/></td>
-				</tr>
-			</table>
-			
-		</div>
 		<div id="purItemDiv">
 			<table id="purItemTab" class="table-default">
 				<tr>
@@ -56,6 +35,28 @@
 					<td class="item-qty-column"><input class="item-qty-input form-control" type="number" min="0"/></td>
 					<td class="item-total-column"></td>
 					<td class="item-delete-column"><input class="remove-item table-btn" type="button" value="Remove" disabled/></td>
+				</tr>
+			</table>
+		</div>
+		<div id="newPurSumDiv">
+			<table id="newPurSumTab">
+				<tr>
+					<th colspan="2">Purchase Summary</th>
+				</tr>
+				<tr>
+					<td>Account</td>
+					<td><select class="form-control" id="newPurAccSel"></select></td>
+				</tr>
+				<tr>
+					<td>Net Payable</td>
+					<td><input class="form-control" id="newPayableInput" type="number" value="0" readonly/></td>
+				</tr>
+				<tr>
+					<td>Details</td>
+					<td><input class="form-control" id="purchaseDetailsInput" type="text" placeholder=""/></td>
+				</tr>
+				<tr>
+					<td class="finish-btn-td" colspan="2"><input class="btn btn-primary" id="newPurFinBtn" type="button" value="Finish"/></td>
 				</tr>
 			</table>
 		</div>

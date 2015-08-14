@@ -17,3 +17,43 @@
 	width: 96px;
 	text-align: center;
 }
+
+#content{
+	width: 1282px;
+	position: relative;
+	/*left: 50%;*/
+	margin-left: -641px;
+	/*text-align: center;*/
+	margin: 20px auto;
+	overflow: auto;
+}
+
+#purItemDiv{
+	float: left;
+}
+
+#purItemTab td{
+	padding: 2px;
+}
+
+#newPurSumTab{
+	position: fixed;
+    margin-left: 890px;
+	border: 2px solid #A8B3BD;
+	border-radius: 10px;
+}
+
+#newPurSumTab th,td {
+  border: 2px solid rgba(168,179,189,0.2);/*//#A8B3BD;*/
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.finish-btn-td{
+	text-align: right;
+	border: none;
+}
+
+#newPurFinBtn{
+	width: 40%;
+}
