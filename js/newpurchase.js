@@ -54,7 +54,7 @@ Purchaser = new function(){
 				return -1;
 		});
 
-		$("#newPurAccSel").html("<option value='-2' disabled>Select Account</option>");
+		$("#newPurAccSel").html("<option value='-2' disabled>Select</option>");
 		$("#newPurAccSel").append("<option value='-1'>New Account</option>");
 		for(var i=0; i<accounts.length; i++){
 			$("#newPurAccSel").append("<option value='"+accounts[i].ID+"'>"+accounts[i].TITLE+"</option>");
@@ -69,12 +69,12 @@ Purchaser = new function(){
 		this.removeOnChangeListener();
 
 		var text = '<tr>';
-		text += '<td class="item-index">'+ind+'</td>';
-		text += '<td><input class="item-name" type="text" list="itemList"/></td>';
-		text += '<td><input class="item-price" type="number" min="0"/></td>';
-		text += '<td><input class="item-quantity" type="number" min="0"/></td>';
-		text += '<td class="item-amount"></td>';
-		text += '<td><input class="remove-item" type="button" value="Remove" disabled/></td>';
+		text += '<td class="index-column">'+ind+'</td>';
+		text += '<td class="item-name-column"><input class="item-name-input form-control" type="text" list="itemList"/></td>';
+		text += '<td class="item-price-column"><input class="item-price-input form-control" type="number" min="0"/></td>';
+		text += '<td class="item-qty-column"><input class="item-qty-input form-control" type="number" min="0"/></td>';
+		text += '<td class="item-total-column"></td>';
+		text += '<td class="item-delete-column"><input class="remove-item table-btn" type="button" value="Remove" disabled/></td>';
 		text += '</tr>';
 
 		$("#purItemTab").append(text);
@@ -84,15 +84,15 @@ Purchaser = new function(){
 	this.setOnChangeListener = function(){
 
 		var ind = $("#purItemTab").find('tr').length-2;
-		$("#purItemTab").find('input.item-name').eq(ind).focus(function(){
+		$("#purItemTab").find('input.item-name-input').eq(ind).focus(function(){
 			console.log('name changed');
 			Purchaser.insertNewRow();
 		});
-		$("#purItemTab").find('input.item-price').eq(ind).focus(function(){
+		$("#purItemTab").find('input.item-price-input').eq(ind).focus(function(){
 			console.log('price changed');
 			Purchaser.insertNewRow();
 		});
-		$("#purItemTab").find('input.item-quantity').eq(ind).focus(function(){
+		$("#purItemTab").find('input.item-qty-input').eq(ind).focus(function(){
 			console.log('quantity changed');
 			Purchaser.insertNewRow();
 		});
@@ -101,17 +101,17 @@ Purchaser = new function(){
 	this.removeOnChangeListener = function(){
 
 		var ind = $("#purItemTab").find('tr').length-2;
-		$("#purItemTab").find('input.item-name').eq(ind).unbind("focus");
-		$("#purItemTab").find('input.item-price').eq(ind).unbind("focus");
-		$("#purItemTab").find('input.item-quantity').eq(ind).unbind("focus");
+		$("#purItemTab").find('input.item-name-input').eq(ind).unbind("focus");
+		$("#purItemTab").find('input.item-price-input').eq(ind).unbind("focus");
+		$("#purItemTab").find('input.item-qty-input').eq(ind).unbind("focus");
 
-		$("#purItemTab").find('input.item-price').eq(ind).change(function(){
+		$("#purItemTab").find('input.item-price-input').eq(ind).change(function(){
 
 			var j = $(this).closest('tr').index()-1;
 			Purchaser.calculateAmount(j);
 		});
 		
-		$("#purItemTab").find('input.item-quantity').eq(ind).change(function(){
+		$("#purItemTab").find('input.item-qty-input').eq(ind).change(function(){
 
 			var j = $(this).closest('tr').index()-1;
 			Purchaser.calculateAmount(j);
@@ -127,7 +127,7 @@ Purchaser = new function(){
 	this.reindexColumn = function(){
 
 		var i=1;
-		$('#purItemTab td.item-index').each(function(){
+		$('#purItemTab td.index-column').each(function(){
 			$(this).html(i++);
 		});
 		this.calculateTotal();
@@ -135,23 +135,23 @@ Purchaser = new function(){
 
 	this.calculateAmount = function(ind){
 
-		var price = parseInt($("#purItemTab").find('input.item-price').eq(ind).val());
-		var qty = parseInt($("#purItemTab input.item-quantity").eq(ind).val());
+		var price = parseInt($("#purItemTab").find('input.item-price-input').eq(ind).val());
+		var qty = parseInt($("#purItemTab input.item-qty-input").eq(ind).val());
 		if(price<=0){
 			price = 1;
-			$("#purItemTab").find('input.item-price').eq(ind).val(price);
+			$("#purItemTab").find('input.item-price-input').eq(ind).val(price);
 		}
 		if(qty<=0){
 			qty = 1;
-			$("#purItemTab input.item-quantity").eq(ind).val(qty);
+			$("#purItemTab input.item-qty-input").eq(ind).val(qty);
 		}
 
 		if(!isNaN(price) && !isNaN(qty)){
 			var am = price*qty;
-			$("#purItemTab td.item-amount").eq(ind).html(Format.formatCurrency(am));
+			$("#purItemTab td.item-total-column").eq(ind).html(Format.formatCurrency(am));
 		}
 		else
-			$("#purItemTab td.item-amount").eq(ind).html("");
+			$("#purItemTab td.item-total-column").eq(ind).html("");
 
 		this.calculateTotal();
 	}
@@ -160,15 +160,15 @@ Purchaser = new function(){
 
 		var tm = 0;
 		
-		var l = $("#purItemTab td.item-amount").length;
+		var l = $("#purItemTab td.item-total-column").length;
 		for(var i=0; i<l; i++){
-			var price = parseInt($("#purItemTab").find('input.item-price').eq(i).val());
-			var qty = parseInt($("#purItemTab input.item-quantity").eq(i).val());
+			var price = parseInt($("#purItemTab").find('input.item-price-input').eq(i).val());
+			var qty = parseInt($("#purItemTab input.item-qty-input").eq(i).val());
 			var am = price*qty;
 			if(!isNaN(am))
 				tm += am;
 		}
-		// $("#purItemTab td.item-amount").each(function(){
+		// $("#purItemTab td.item-total-column").each(function(){
 
 		// 	var am = parseInt($(this).html());
 		// 	if(!isNaN(am))
@@ -221,9 +221,9 @@ Purchaser = new function(){
 		$("#purItemTab tr:gt(0):lt("+l+")").each(function(){
 
 			var s_it = {};
-			var it = $(this).find("input.item-name").eq(0).val();
+			var it = $(this).find("input.item-name-input").eq(0).val();
 			if(tree[it]==undefined){
-				$(this).find("input.item-name").eq(0).focus();
+				$(this).find("input.item-name-input").eq(0).focus();
 				isValid = false;
 				return isValid;
 			}
@@ -231,9 +231,9 @@ Purchaser = new function(){
 				s_it['ITEM_ID'] = items[tree[it]].ID;
 			}
 
-			var price = parseInt($(this).find("input.item-price").eq(0).val());
+			var price = parseInt($(this).find("input.item-price-input").eq(0).val());
 			if(isNaN(price) || price<=0){
-				$(this).find("input.item-price").eq(0).focus();
+				$(this).find("input.item-price-input").eq(0).focus();
 				isValid = false;
 				return isValid;
 			}
@@ -241,9 +241,9 @@ Purchaser = new function(){
 				s_it['COST'] = price;
 			}
 
-			var qty = parseInt($(this).find("input.item-quantity").eq(0).val());
+			var qty = parseInt($(this).find("input.item-qty-input").eq(0).val());
 			if(isNaN(qty) || qty<=0){
-				$(this).find("input.item-quantity").eq(0).focus();
+				$(this).find("input.item-qty-input").eq(0).focus();
 				isValid = false;
 				return isValid;
 			}

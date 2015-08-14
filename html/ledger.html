@@ -12,50 +12,54 @@
 	<link rel="stylesheet" type="text/css" href="ledger.css">
 </head>
 <body>
+<div id="wrapper">
 	<div id="header">
 		<div id="logo"></div>
 		<h1 id="heading">Niagra Sports Management System</h1>
 	</div>
-	<div id="searchLedgerDiv">
-		<select class="form-control drop-down" id="ledgerCitySelect"></select>
-		<select class="form-control drop-down" id="ledgerAccountTypeSelect">
-			<option value='b'>Both</option>
-			<option value='c'>Creditors</option>
-			<option value='d'>Debtors</option>
-		</select>
-		<input class="form-control search-box" id="searchLedgerBar" type="text" placeholder="Search account"/>
-		<input class="btn btn-primary" id="searchLedgerBtn" type="button" value="Search"/>
-	</div>
-	<div id="new-account-wrapper">
-		<div id="new-account-container">
-			<input class="cross-btn" id="new-account-dissmiss-btn" type="button" value="x"/>
-			<div id="newAccDiv">
-				<h2>Create New Account</h2>
-				<div class="form-group"><input class="form-control" id="newAccTitle" type="text" placeholder="Title"/></div>
-				<div class="form-group"><input class="form-control" id="newAccCity" type="text" placeholder="City" list="cityList"/></div>
-				<div class="form-group"><input class="form-control" id="newAccPtcl" type="text" placeholder="Ptcl"/></div>
-				<div class="form-group"><input class="form-control" id="newAccCell" type="text" placeholder="Mobile"/></div>
-				<div class="form-group"><input class="form-control" id="newAccExt" type="text" placeholder="Detail"/></div>
-				<div class="form-group"><input class="form-control" id="newAccBal" type="number" placeholder="Balance"/></div>
-				<div class="form-group"><input class="form-control" id="newAccDate" type="date" /></div>
-				<div class="form-group"><input class="btn btn-success" id="newAccBtn" type="button" value="Insert"/></div>
+	<div id="content">
+		<div id="searchLedgerDiv">
+			<select class="form-control drop-down" id="ledgerCitySelect"></select>
+			<select class="form-control drop-down" id="ledgerAccountTypeSelect">
+				<option value='b'>Both</option>
+				<option value='c'>Creditors</option>
+				<option value='d'>Debtors</option>
+			</select>
+			<input class="form-control search-box" id="searchLedgerBar" type="text" placeholder="Search account"/>
+			<input class="btn btn-primary" id="searchLedgerBtn" type="button" value="Search"/>
+		</div>
+		<div id="new-account-wrapper">
+			<div id="new-account-container">
+				<input class="cross-btn" id="new-account-dissmiss-btn" type="button" value="x"/>
+				<div id="newAccDiv">
+					<h2>Create New Account</h2>
+					<div class="form-group"><input class="form-control" id="newAccTitle" type="text" placeholder="Title"/></div>
+					<div class="form-group"><input class="form-control" id="newAccCity" type="text" placeholder="City" list="cityList"/></div>
+					<div class="form-group"><input class="form-control" id="newAccPtcl" type="text" placeholder="Ptcl"/></div>
+					<div class="form-group"><input class="form-control" id="newAccCell" type="text" placeholder="Mobile"/></div>
+					<div class="form-group"><input class="form-control" id="newAccExt" type="text" placeholder="Detail"/></div>
+					<div class="form-group"><input class="form-control" id="newAccBal" type="number" placeholder="Balance"/></div>
+					<div class="form-group"><input class="form-control" id="newAccDate" type="date" /></div>
+					<div class="form-group"><input class="btn btn-success" id="newAccBtn" type="button" value="Insert"/></div>
+				</div>
 			</div>
 		</div>
-	</div>
-	<datalist id="cityList"></datalist>
-	<div id="ledger-content-wrapper">
-		<div id="ledgerDataDiv"></div>
-		<input id="showNewAccountBtn" type="image" src="profile.png">
-	</div>
-	<div id="ledger-detail-wrapper">
-		<div id="ledger-detail-container">
-			<input class='cross-btn' id='ledger-dismiss-btn' type='button' value='x'>
-			<div id="ledgerDetailDiv"></div>
+		<datalist id="cityList"></datalist>
+		<div id="ledger-content-wrapper">
+			<div id="ledgerDataDiv"></div>
+			<input id="showNewAccountBtn" type="image" src="profile.png">
+		</div>
+		<div id="ledger-detail-wrapper">
+			<div id="ledger-detail-container">
+				<input class='cross-btn' id='ledger-dismiss-btn' type='button' value='x'>
+				<div id="ledgerDetailDiv"></div>
+			</div>
 		</div>
 	</div>
 	<div id="footer">
 		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
 		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
 	</div>
+</div>
 </body>
 </html>

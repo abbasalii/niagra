@@ -1,0 +1,47 @@
+.bill-record-table-index{
+	text-align: center;
+}
+
+.bill-record-table-date{
+	width: 160px;
+	text-align: center;
+}
+
+.bill-record-table-time{
+	width: 80px;
+	text-align: center;
+}
+
+.bill-record-table-title{
+	width: 208px;
+}
+
+.bill-record-table-amount{
+	width: 96px;
+	text-align: right;
+}
+
+.bill-record-table-detail{
+	width: 80px;
+	text-align: center;
+}
+
+.bill-detail-btn{
+	font-weight: bold;
+	border: none;
+	background-color: rgba(0,0,0,0);
+}
+
+.bill-detail-btn:hover{
+	cursor: pointer;
+}
+
+.search-btn-td{
+	vertical-align: middle;
+	/*top:10px;*/
+}
+
+#searchBillBtn{
+	/*position: relative;
+	height: 48px;*/
+}

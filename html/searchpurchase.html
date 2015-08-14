@@ -9,30 +9,38 @@
 	<script type="text/javascript" src="searchpurchase.js"></script>
 	<script type="text/javascript" src="Format.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
-	<style type="text/css">
-		.bill-detail-btn{
-
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="searchpurchase.css">
 </head>
 <body>
-	<div id="purchaseSearchDiv">
-		<div id="searchByNumber">
-			<input id="purchaseNumInput" type="number" min="1" placeholder="Invoice number"/>
-			<input id="viewPurchaseBtn" type="button" value="View"/>
-		</div>
-		<div id="searchByFilters">
-			<select id="purchaseCitySelect"></select>
-			<input id="searchPurchaseBar" type="text" placeholder="Account Title" list="accList"/>
-			<input id="beginPurchaseDate" type="date"/>
-			<input id="endPurchaseDate" type="date"/>
-			<input id="minPurchaseAmount" type="number" min="0" placeholder="Minimum Amount"/>
-			<input id="maxPurchaseAmount" type="number" min="0" placeholder="Maximum Amount"/>
-			<input id="searchPurchaseBtn" type="button" value="Search"/>
-		</div>
+<div id="wrapper">
+	<div id="header">
+		<div id="logo"></div>
+		<h1 id="heading">Niagra Sports Management System</h1>
 	</div>
-	<div id="purchaseRecordsDiv"></div>
-	<div id="purchaseDetailDiv"></div>
-	<datalist id="accList"></datalist>
+	<div id="content">
+		<div id="purchaseSearchDiv">
+			<div id="searchByNumber">
+				<input id="purchaseNumInput" type="number" min="1" placeholder="Invoice number"/>
+				<input id="viewPurchaseBtn" type="button" value="View"/>
+			</div>
+			<div id="searchByFilters">
+				<select id="purchaseCitySelect"></select>
+				<input id="searchPurchaseBar" type="text" placeholder="Account Title" list="accList"/>
+				<input id="beginPurchaseDate" type="date"/>
+				<input id="endPurchaseDate" type="date"/>
+				<input id="minPurchaseAmount" type="number" min="0" placeholder="Minimum Amount"/>
+				<input id="maxPurchaseAmount" type="number" min="0" placeholder="Maximum Amount"/>
+				<input id="searchPurchaseBtn" type="button" value="Search"/>
+			</div>
+		</div>
+		<div id="purchaseRecordsDiv"></div>
+		<div id="purchaseDetailDiv"></div>
+		<datalist id="accList"></datalist>
+	</div>
+	<div id="footer">
+		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
+		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
+	</div>
+</div>
 </body>
 </html>

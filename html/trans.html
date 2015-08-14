@@ -6,48 +6,70 @@
 	<script type="text/javascript" src="jquery.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="Socket.js"></script>
+	<script type="text/javascript" src="Format.js"></script>
 	<script type="text/javascript" src="trans.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
 	<link rel="stylesheet" type="text/css" href="trans.css">
 </head>
 <body>
+<div id="wrapper">
 	<div id="header">
 		<div id="logo"></div>
 		<h1 id="heading">Niagra Sports Management System</h1>
 	</div>
-	<div id="searchTransDiv">
-		<select id="transCitySelect"></select>
-		<input id="searchTransBar" type="text" placeholder="Search" list="accList"/>
-		<input id="beginTransDate" type="date"/>
-		<input id="endTransDate" type="date"/>
-		<input id="minTransAmount" type="number" min="0" placeholder="Minimum Amount"/>
-		<input id="maxTransAmount" type="number" min="0" placeholder="Maximum Amount"/>
-		<input id="searchTransBtn" type="button" value="Search"/>
+	<div id="content">
+		<div id="searchTransDiv">
+			<select id="transCitySelect"></select>
+			<input id="searchTransBar" type="text" placeholder="Search" list="accList"/>
+			<select id="transactionTypeSelect">
+				<option value='b'>Both</option>
+				<option value='c'>Credit</option>
+				<option value='d'>Debit</option>
+			</select>
+			<input id="beginTransDate" type="date"/>
+			<input id="endTransDate" type="date"/>
+			<input id="minTransAmount" type="number" min="0" placeholder="Minimum Amount"/>
+			<input id="maxTransAmount" type="number" min="0" placeholder="Maximum Amount"/>
+			<input id="searchTransBtn" type="button" value="Search"/>
+		</div>
+		<div id="new-trans-wrapper">
+			<div id="new-trans-container">
+				<input class="cross-btn" id="new-trans-dismiss-btn" type="button" value="x"/>
+				<div id="newTransDiv">
+					<h2>Make New Transaction</h2>
+					<div class="form-group"><select class="form-control" id="newTransAcc"></select></div>
+					<div class="form-group"><input class="form-control" id="newTransDate" type="date"/></div>
+					<div class="form-group">
+						<select class="form-control" id="newTransType">
+							<option value="debit">Debit</option>
+							<option value="credit">Credit</option>
+							<option value="both">Both</option>
+						</select>
+					</div>
+					<div class="form-group"><input class="form-control" id="newTransAmount" type="number" min="0" placeholder="Debit"/></div>
+					<div class="form-group"><input class="form-control" id="newTransDetail" type="text" placeholder="Description"/></div>
+					<div class="form-group extra-amount-field">
+						<input class="form-control" id="newTransAmount2" type="number" min="0" placeholder="Credit"/>
+					</div>
+					<div class="form-group extra-detail-field">
+						<input class="form-control" id="newTransDetail2" type="text" placeholder="Description"/>
+					</div>
+					<div class="form-group"><input class="btn btn-success" id="newTransBtn" type="button" value="Proceed"/></div>
+				</div>
+			</div>
+		</div>
+		<div id="trans-content-wrapper">
+			<div id="transDataDiv"></div>
+			<input id="showNewTransBtn" type="image" src="transaction.png">
+		</div>
+		<!-- <div id="transDataDiv"></div> -->
+		<datalist id="cityList"></datalist>
+		<datalist id="accList"></datalist>
 	</div>
-	<div id="newTransDiv">
-		<select id="newTransAcc"></select>
-		<input id="newTransDate" type="date"/>
-		<select id="newTransType">
-			<option value="debit">Debit</option>
-			<option value="credit">Credit</option>
-			<option value="both">Both</option>
-		</select>
-		<input id="newTransAmount" type="number" min="0" placeholder="Debit"/>
-		<input id="newTransDetail" type="text" placeholder="Description"/>
-		<input id="newTransAmount2" class="extra-amount-field" type="number" min="0" placeholder="Credit"/>
-		<input id="newTransDetail2" class="extra-detail-field" type="text" placeholder="Description"/>
-		<input id="newTransBtn" type="button" value="Proceed"/>
-	</div>
-	<div id="trans-content-wrapper">
-		<div id="transDataDiv"></div>
-		<input id="showNewTransBtn" type="image" src="transaction.png">
-	</div>
-	<!-- <div id="transDataDiv"></div> -->
-	<datalist id="cityList"></datalist>
-	<datalist id="accList"></datalist>
 	<div id="footer">
 		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
 		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
 	</div>
+</div>
 </body>
 </html>

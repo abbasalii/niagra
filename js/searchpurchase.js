@@ -129,7 +129,7 @@ PFinder = new function(){
 
 		records = data;
 
-		var text = "<table id='purchaseRecordsTable'>";
+		var text = "<table class='table-default'>";
 		text += "<tr>";
 		text += "<th>NO</th>";
 		text += "<th>DATE</th>";
@@ -141,24 +141,24 @@ PFinder = new function(){
 
 		for(var i=0; i<data.length; i++){
 			text += "<tr>";
-			text += "<td>" + (i+1) + "</td>";
+			text += "<td class='index-column'>" + (i+1) + "</td>";
 			var bdate = new Date(data[i].I_DATE);
-			text += "<td>" + bdate.toDateString() + "</td>";
-			text += "<td>" + Format.formatTime(bdate) + "</td>";
+			text += "<td class='date-column'>" + bdate.toDateString() + "</td>";
+			text += "<td class='time-column'>" + Format.formatTime(bdate) + "</td>";
 			for(var j=0; j<accounts.length; j++)
 				if(data[i].ACCOUNT_ID==accounts[j].ID) {
-					text += "<td>" + accounts[j].TITLE + "</td>";
+					text += "<td class='account-title-column'>" + accounts[j].TITLE + "</td>";
 					break;
 				}
 
-			text += "<td>" + new Number(data[i].PAYABLE).toLocaleString("hi-IN") + "</td>";
-			text += "<td><input class='purchase-detail-btn' type='button' value='Details'/></td>";
+			text += "<td class='item-total-column'>" + new Number(data[i].PAYABLE).toLocaleString("hi-IN") + "</td>";
+			text += "<td class='table-btn-column'><input class='table-btn' type='button' value='Details'/></td>";
 			text += "</tr>";
 		}
 		text += "</table>";
 		$("#purchaseRecordsDiv").html(text);
 
-		$(".purchase-detail-btn").each(function(){
+		$(".table-btn").each(function(){
 			$(this).click(function(){
 				var ind = $(this).closest('tr').index()-1;
 				var id = records[ind].ID;
@@ -194,14 +194,23 @@ PFinder = new function(){
 		}
 
 		var text = "<div id='purchaseDetailHeader'>";
-		text += "<div>Title: " + info.TITLE + "</div>";
+		text += "<table id='purDetHeadTab'>";
+		text += "<tr>";
+		text += "<td>Title</td><td>" + info.TITLE + "</td>";
+		text += "</tr>";
 		var bdate = new Date(info.I_DATE);
-		text += "<div>Date: " + bdate.toDateString() + "</div>";
-		text += "<div>Time: " + Format.formatTime(bdate) + "</div>";
-		text += "<div>Gross Total: " + Format.formatCurrency(info.PAYABLE) + "</div>";
+		text += "<tr>";
+		text += "<td>Date</td><td>" + bdate.toDateString() + "</td>";
+		text += "</tr>";
+		text += "<tr>";
+		text += "<td>Time</td><td>" + Format.formatTime(bdate) + "</td>";
+		text += "</tr>";
+		text += "<tr>";
+		text += "<td>Gross Total</td><td>" + Format.formatCurrency(info.PAYABLE) + "</td>";
+		text += "</tr>";
 		text += "</div>";
 
-		text += "<table id='purchaseDetailsTable'>";
+		text += "<table id='purchaseDetailsTable' class='table-default'>";
 		text += "<tr>";
 		text += "<th>NO</th>";
 		text += "<th>NAME</th>";
@@ -209,24 +218,26 @@ PFinder = new function(){
 		text += "<th>QUANTITY</th>";
 		text += "<th>TOTAL</th>";
 		text += "<th>AMOUNT</th>";
-		text += "<th>RETURN</th>";
+		text += "<th></th>";
 		text += "</tr>";
 
 		for(var i=0; i<data.length; i++){
 			text += "<tr>";
-			text += "<td>" + (i+1) + "</td>";
-			text += "<td>" + data[i].NAME + "</td>";
-			text += "<td>" + Format.formatCurrency(data[i].COST) + "</td>";
-			text += "<td> <input class='purchase-detail-qty' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
-			text += "<td>" + Format.formatCurrency(parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
-			text += "<td class='purchase-detail-return-amount'></td>";
-			text += "<td> <input class='purchase-detail-return-box' type='checkbox'/> </td>";
+			text += "<td class='index-column'>" + (i+1) + "</td>";
+			text += "<td class='item-name-column'>" + data[i].NAME + "</td>";
+			text += "<td class='item-price-column'>" + Format.formatCurrency(data[i].COST) + "</td>";
+			text += "<td> <input class='item-qty-input form-control' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
+			text += "<td class='item-total-column'>" + Format.formatCurrency(parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
+			text += "<td class='purchase-detail-return-amount item-total-column'></td>";
+			text += "<td class='checkbox-column'> <input class='purchase-detail-return-box' type='checkbox'/> </td>";
 			text += "</tr>";
 		}
 		text += "</table>";
-		text += "<div id='itemReturnTotalDiv'>Total: <span id='itemReturnTotalSpan'>0</span></div>";
-		text += "<div id='itemReturnDetailDiv'><label>Details<input type='text' placeholder='Return on Bill'/></label></div>";
-		text += "<input id='returnItemBtn' type='button' value='Return'/>";
+		text += "<table>";
+		text += "<tr id='itemReturnTotalDiv'><td>Total</td><td id='itemReturnTotalSpan'>0</td></tr>";
+		text += "<tr id='itemReturnDetailDiv'><td>Details</td><td><input class='form-control' type='text' placeholder='Return on Bill'/></td></tr>";
+		text += "<tr><td><input id='returnItemBtn' class='btn btn-default' type='button' value='Return'/></td></tr>";
+		text += "</table>";
 		$("#purchaseDetailDiv").html(text);
 
 		$("#purchaseDetailsTable input.purchase-detail-return-box").each(function(){
@@ -234,17 +245,17 @@ PFinder = new function(){
 			$(this).click(function(){
 				var n = $(this).closest('tr').index()-1;
 				if($(this).prop('checked')){
-					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).prop('readonly',false);
+					$("#purchaseDetailsTable input.item-qty-input").eq(n).prop('readonly',false);
 					PFinder.calculateAmount(n);
-					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).change(function(){
+					$("#purchaseDetailsTable input.item-qty-input").eq(n).change(function(){
 						PFinder.calculateAmount(n);
 					});
 				}
 				else{
-					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val(itemList[n].QUANTITY);
-					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).prop('readonly',true);
+					$("#purchaseDetailsTable input.item-qty-input").eq(n).val(itemList[n].QUANTITY);
+					$("#purchaseDetailsTable input.item-qty-input").eq(n).prop('readonly',true);
 					$("#purchaseDetailsTable .purchase-detail-return-amount").eq(n).html("");
-					$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).unbind("change");
+					$("#purchaseDetailsTable input.item-qty-input").eq(n).unbind("change");
 					PFinder.calculateTotal();
 				}
 			});
@@ -285,17 +296,19 @@ PFinder = new function(){
 
 	this.calculateAmount = function(n){
 
-		var qty = parseInt($("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val());
+		var qty = parseInt($("#purchaseDetailsTable input.item-qty-input").eq(n).val());
 		if(qty<1){
-			$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val(1);
+			$("#purchaseDetailsTable input.item-qty-input").eq(n).val(1);
 			qty=1;
 		}
 		if(qty>itemList[n].QUANTITY){
-			$("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val(itemList[n].QUANTITY);
+			$("#purchaseDetailsTable input.item-qty-input").eq(n).val(itemList[n].QUANTITY);
 			qty=itemList[n].QUANTITY;
 		}
-		if(!isNaN(qty))
-			$("#purchaseDetailsTable .purchase-detail-return-amount").eq(n).html(qty*itemList[n].COST);
+		if(!isNaN(qty)){
+			var am = Format.formatCurrency(qty*itemList[n].COST);
+			$("#purchaseDetailsTable .purchase-detail-return-amount").eq(n).html(am);
+		}
 
 		PFinder.calculateTotal();
 	}
@@ -306,7 +319,7 @@ PFinder = new function(){
 		$("#purchaseDetailsTable input:checked").each(function(){
 
 			var ind = $(this).closest('tr').index()-1;
-			var q = parseInt($("#purchaseDetailsTable input.purchase-detail-qty").eq(ind).val());
+			var q = parseInt($("#purchaseDetailsTable input.item-qty-input").eq(ind).val());
 			var p = q*itemList[ind].COST;
 			total += p;
 		});
@@ -334,7 +347,7 @@ PFinder = new function(){
 		var l_id = [];
 		$("#purchaseDetailsTable input:checked").each(function(){
 			var n = $(this).closest('tr').index()-1;
-			var qty = $("#purchaseDetailsTable input.purchase-detail-qty").eq(n).val();
+			var qty = $("#purchaseDetailsTable input.item-qty-input").eq(n).val();
 			l_id.push({PURCHASE_ID:itemList[n].ID,QUANTITY:qty});
 		});
 		data['PURCHASES'] = l_id;

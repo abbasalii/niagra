@@ -69,12 +69,12 @@ NewBill = new function(){
 		this.removeOnChangeListener();
 
 		var text = '<tr>';
-		text += '<td class="item-index">'+ind+'</td>';
-		text += '<td><input class="item-name" type="text" list="itemList"/></td>';
-		text += '<td><input class="item-price" type="number" min="0"/></td>';
-		text += '<td><input class="item-quantity" type="number" min="0"/></td>';
+		text += '<td class="index-column">'+ind+'</td>';
+		text += '<td class="new-bill-name-td"><input class="item-name form-control" type="text" list="itemList"/></td>';
+		text += '<td class="new-bill-price-td"><input class="item-price form-control" type="number" min="0"/></td>';
+		text += '<td class="new-bill-qty-td"><input class="item-quantity form-control" type="number" min="0"/></td>';
 		text += '<td class="item-amount"></td>';
-		text += '<td><input class="remove-item" type="button" value="Remove" disabled/></td>';
+		text += '<td class="new-bill-remove-td"><input class="remove-item" type="button" value="Remove" disabled/></td>';
 		text += '</tr>';
 
 		$("#billItemTab").append(text);
@@ -137,7 +137,7 @@ NewBill = new function(){
 	this.reindexColumn = function(){
 
 		var i=1;
-		$('#billItemTab td.item-index').each(function(){
+		$('#billItemTab td.index-column').each(function(){
 			$(this).html(i++);
 		});
 		this.calculateTotal();

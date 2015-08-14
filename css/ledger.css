@@ -72,11 +72,11 @@
 }
 #ledger-content-wrapper{
 	width: 1015px;
-	height: 500px;
+	/*height: 500px;*/
 	position: relative;
 	left: 50%;
 	margin-left: -405px;
-
+	overflow: auto;
 }
 #showNewAccountBtn{
 	position: relative;
@@ -120,13 +120,6 @@
 	text-align: right;
 }
 
-.balance-positive-field {
-	color: #0000ff
-}
-
-.balance-negative-field {
-	color: #ff0000;
-}
 #ledger-detail-wrapper {
 	display: none;
 	width: 100%;

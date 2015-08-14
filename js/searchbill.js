@@ -129,9 +129,9 @@ Biller = new function(){
 
 		records = data;
 
-		var text = "<table id='billRecordsTable'>";
+		var text = "<table class='table-default'>";
 		text += "<tr>";
-		text += "<th>NO</th>";
+		text += "<th>No</th>";
 		text += "<th>DATE</th>";
 		text += "<th>TIME</th>";
 		text += "<th>TITLE</th>";
@@ -141,18 +141,18 @@ Biller = new function(){
 
 		for(var i=0; i<data.length; i++){
 			text += "<tr>";
-			text += "<td>" + (i+1) + "</td>";
+			text += "<td class='bill-record-table-index'>" + (i+1) + "</td>";
 			var bdate = new Date(data[i].B_DATE);
-			text += "<td>" + bdate.toDateString() + "</td>";
-			text += "<td>" + Format.formatTime(bdate) + "</td>";
+			text += "<td class='bill-record-table-date'>" + bdate.toDateString() + "</td>";
+			text += "<td class='bill-record-table-time'>" + Format.formatTime(bdate) + "</td>";
 			for(var j=0; j<accounts.length; j++)
 				if(data[i].ACCOUNT_ID==accounts[j].ID) {
-					text += "<td>" + accounts[j].TITLE + "</td>";
+					text += "<td class='bill-record-table-title'>" + accounts[j].TITLE + "</td>";
 					break;
 				}
 
-			text += "<td>" + new Number(data[i].AMOUNT_DUE).toLocaleString("hi-IN") + "</td>";
-			text += "<td><input class='bill-detail-btn' type='button' value='Details'/></td>";
+			text += "<td class='bill-record-table-amount'>" + new Number(data[i].AMOUNT_DUE).toLocaleString("hi-IN") + "</td>";
+			text += "<td class='bill-record-table-detail'><input class='bill-detail-btn' type='button' value='Details'/></td>";
 			text += "</tr>";
 		}
 		text += "</table>";
@@ -194,17 +194,19 @@ Biller = new function(){
 		}
 
 		var text = "<div id='billDetailHeader'>";
-		text += "<div>Title: " + info.TITLE + "</div>";
+		text += "<table>";
+		text += "<tr><td>Title</td><td>" + info.TITLE + "</td></tr>";
 		var bdate = new Date(info.B_DATE);
-		text += "<div>Date: " + bdate.toDateString() + "</div>";
-		text += "<div>Time: " + Format.formatTime(bdate) + "</div>";
-		text += "<div>Gross Total: " + Format.formatCurrency(info.AMOUNT_DUE) + "</div>";
-		text += "<div>Discount: " + info.DISCOUNT + "</div>";
-		text += "<div>Net Total: " + Format.formatCurrency(info.AMOUNT_DUE-info.DISCOUNT) + "</div>";
-		text += "<div>Amount Paid: " + Format.formatCurrency(info.AMOUNT_PAID) + "</div>";
+		text += "<tr><td>Date</td><td>" + bdate.toDateString() + "</td></tr>";
+		text += "<tr><td>Time</td><td>" + Format.formatTime(bdate) + "</td></tr>";
+		text += "<tr><td>Gross Total</td><td>" + Format.formatCurrency(info.AMOUNT_DUE) + "</td></tr>";
+		text += "<tr><td>Discount</td><td>" + info.DISCOUNT + "</td></tr>";
+		text += "<tr><td>Net Total</td><td>" + Format.formatCurrency(info.AMOUNT_DUE-info.DISCOUNT) + "</td></tr>";
+		text += "<tr><td>Amount Paid</td><td>" + Format.formatCurrency(info.AMOUNT_PAID) + "</td></tr>";
+		text += "</table>";
 		text += "</div>";
 
-		text += "<table id='billDetailsTable'>";
+		text += "<table id='billDetailsTable' class='table-default'>";
 		text += "<tr>";
 		text += "<th>NO</th>";
 		text += "<th>NAME</th>";
@@ -212,24 +214,26 @@ Biller = new function(){
 		text += "<th>QUANTITY</th>";
 		text += "<th>PAYABLE</th>";
 		text += "<th>AMOUNT</th>";
-		text += "<th>RETURN</th>";
+		text += "<th></th>";
 		text += "</tr>";
 
 		for(var i=0; i<data.length; i++){
 			text += "<tr>";
-			text += "<td>" + (i+1) + "</td>";
-			text += "<td>" + data[i].NAME + "</td>";
-			text += "<td>" + Format.formatCurrency(data[i].COST) + "</td>";
-			text += "<td> <input class='bill-detail-qty' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
-			text += "<td>" + Format.formatCurrency(parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
-			text += "<td class='bill-detail-return-amount'></td>";
+			text += "<td class='index-column'>" + (i+1) + "</td>";
+			text += "<td class='item-name-column'>" + data[i].NAME + "</td>";
+			text += "<td class='item-price-column'>" + Format.formatCurrency(data[i].COST) + "</td>";
+			text += "<td> <input class='form-control item-qty-input' type='number' value='" + data[i].QUANTITY + "' readonly/></td>";
+			text += "<td class='item-total-column'>" + Format.formatCurrency(parseInt(data[i].COST)*parseInt(data[i].QUANTITY)) + "</td>";
+			text += "<td class='bill-detail-return-amount item-total-column'></td>";
 			text += "<td> <input class='bill-detail-return-box' type='checkbox'/> </td>";
 			text += "</tr>";
 		}
 		text += "</table>";
-		text += "<div id='itemReturnTotalDiv'>Total: <span id='itemReturnTotalSpan'>0</span></div>";
-		text += "<div id='itemReturnDetailDiv'><label>Details<input type='text' placeholder='Return on Bill'/></label></div>";
-		text += "<input id='returnItemBtn' type='button' value='Return'/>";
+		text += "<table>";
+		text += "<tr id='itemReturnTotalDiv'><td>Total</td> <td id='itemReturnTotalSpan'>0</td></tr>";
+		text += "<tr id='itemReturnDetailDiv'><td>Details</td><td><input class='form-control' type='text' placeholder='Return on Bill'/></td></tr>";
+		text += "<tr><td><input id='returnItemBtn' class='btn btn-default' type='button' value='Return'/></td></tr>";
+		text += "</table>";
 		$("#billDetailDiv").html(text);
 
 		$("#billDetailsTable input.bill-detail-return-box").each(function(){
@@ -237,17 +241,17 @@ Biller = new function(){
 			$(this).click(function(){
 				var n = $(this).closest('tr').index()-1;
 				if($(this).prop('checked')){
-					$("#billDetailsTable input.bill-detail-qty").eq(n).prop('readonly',false);
+					$("#billDetailsTable input.item-qty-input").eq(n).prop('readonly',false);
 					Biller.calculateAmount(n);
-					$("#billDetailsTable input.bill-detail-qty").eq(n).change(function(){
+					$("#billDetailsTable input.item-qty-input").eq(n).change(function(){
 						Biller.calculateAmount(n);
 					});
 				}
 				else{
-					$("#billDetailsTable input.bill-detail-qty").eq(n).val(itemList[n].QUANTITY);
-					$("#billDetailsTable input.bill-detail-qty").eq(n).prop('readonly',true);
+					$("#billDetailsTable input.item-qty-input").eq(n).val(itemList[n].QUANTITY);
+					$("#billDetailsTable input.item-qty-input").eq(n).prop('readonly',true);
 					$("#billDetailsTable .bill-detail-return-amount").eq(n).html("");
-					$("#billDetailsTable input.bill-detail-qty").eq(n).unbind("change");
+					$("#billDetailsTable input.item-qty-input").eq(n).unbind("change");
 					Biller.calculateTotal();
 				}
 			});
@@ -288,13 +292,13 @@ Biller = new function(){
 
 	this.calculateAmount = function(n){
 
-		var qty = parseInt($("#billDetailsTable input.bill-detail-qty").eq(n).val());
+		var qty = parseInt($("#billDetailsTable input.item-qty-input").eq(n).val());
 		if(qty<1){
-			$("#billDetailsTable input.bill-detail-qty").eq(n).val(1);
+			$("#billDetailsTable input.item-qty-input").eq(n).val(1);
 			qty=1;
 		}
 		if(qty>itemList[n].QUANTITY){
-			$("#billDetailsTable input.bill-detail-qty").eq(n).val(itemList[n].QUANTITY);
+			$("#billDetailsTable input.item-qty-input").eq(n).val(itemList[n].QUANTITY);
 			qty=itemList[n].QUANTITY;
 		}
 		if(!isNaN(qty)){
@@ -311,7 +315,7 @@ Biller = new function(){
 		$("#billDetailsTable input:checked").each(function(){
 
 			var ind = $(this).closest('tr').index()-1;
-			var q = parseInt($("#billDetailsTable input.bill-detail-qty").eq(ind).val());
+			var q = parseInt($("#billDetailsTable input.item-qty-input").eq(ind).val());
 			var p = q*itemList[ind].COST;
 			total += p;
 		});
@@ -339,7 +343,7 @@ Biller = new function(){
 		var l_id = [];
 		$("#billDetailsTable input:checked").each(function(){
 			var n = $(this).closest('tr').index()-1;
-			var qty = $("#billDetailsTable input.bill-detail-qty").eq(n).val();
+			var qty = $("#billDetailsTable input.item-qty-input").eq(n).val();
 			l_id.push({SALE_ID:itemList[n].ID,QUANTITY:qty});
 		});
 		data['SALES'] = l_id;

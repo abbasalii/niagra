@@ -16,8 +16,6 @@ Trans = new function(){
 		console.log("Initializing transactions...");
 		this.getCities();
 		this.getAccounts();
-		// this.setAccounts([{ID:1,TITLE:'CA SPORTS',CITY_ID:3},{ID:2,TITLE:'NEW SPORTS',CITY_ID:2},
-		// 	{ID:3,TITLE:'SAKI',CITY_ID:1},{ID:4,TITLE:'TWO SPORTS',CITY_ID:4}]);
 	}
 
 	this.getCities = function(){
@@ -45,30 +43,6 @@ Trans = new function(){
 		}
 		$("#transCitySelect").html(text);
 	}
-
-	// this.searchCities = function(acc){
-
-	// 	var text = "";
-	// 	if(acc.length==0){
-	// 		text += "<option value='-1'>All</option>";
-	// 		for(var i=0; i<cities.length; i++)
-	// 			text += "<option value='"+cities[i].ID+"''>"+cities[i].NAME+"</option>";
-	// 	}
-	// 	else{
-	// 		var temp = [];
-	// 		for(var i=0; i<accounts.length; i++){
-	// 			if(accounts[i].TITLE.indexOf(acc)>-1 && temp.indexOf(accounts[i].CITY_ID)<0)
-	// 				temp.push(accounts[i].CITY_ID);
-	// 		}
-	// 		for(var i=0; i<temp.length; i++)
-	// 			for(var j=0; j<cities.length; j++)
-	// 				if(cities[j].ID==temp[i]){
-	// 					text += "<option value='"+cities[j].ID+"''>"+cities[j].NAME+"</option>";
-	// 					break;
-	// 				}
-	// 	}
-	// 	$("#transCitySelect").html(text);
-	// }
 
 	this.setAccounts = function(data){
 
@@ -159,14 +133,18 @@ Trans = new function(){
 		text += "<th>DATE</th>";
 		text += "<th>TIME</th>";
 		text += "<th>TITLE</th>";
-		text += "<th>AMOUNT</th>";
+		text += "<th class='trans-amount-class'>AMOUNT</th>";
 		text += "<th class='trans-desc-class'>DESCRIPTION</th>";
 		text += "</tr>";
 
+		var _t = $("#transactionTypeSelect").val();
+		var k=1;
 		for(var i=0; i<transs.length; i++){
 
+			if((_t=="c" && transs[i].AMOUNT>0) || (_t=="d" && transs[i].AMOUNT<0))
+				continue;
 			text += "<tr>";
-			text += "<td class='trans-index-class'>" + (i+1) + "</td>";
+			text += "<td class='trans-index-class'>" + k++ + "</td>";
 			var tdate = new Date(transs[i].T_DATE);
 			text += "<td>" + tdate.toDateString(); + "</td>";
 			text += "<td>" + this.formatTime(tdate) + "</td>";
@@ -175,7 +153,12 @@ Trans = new function(){
 					text += "<td>" + accounts[j].TITLE + "</td>";
 					break;
 				}
-			text += "<td>" + transs[i].AMOUNT + "</td>";
+			text += "<td class='trans-amount-class";
+			if(transs[i].AMOUNT>0)
+				text += " balance-positive-field";
+			else
+				text += " balance-negative-field";
+			text += "'>" + Format.formatCurrency(transs[i].AMOUNT) + "</td>";
 			text += "<td class='trans-desc-class'>" + transs[i].DESCRIPTION + "</td>";
 			text += "</tr>";
 		}
@@ -376,6 +359,8 @@ Trans = new function(){
 			Trans.displayFields();
 			$("#newTransDetail").val(auto['DETAIL']);
 		}
+
+		$("#new-trans-wrapper").show("slow");
 	}
 }
 
@@ -427,6 +412,14 @@ $(function() {
 	});
 
 	$("#newTransType").change(Trans.displayFields);
+
+	$("#showNewTransBtn").click(function(){
+		$("#new-trans-wrapper").show("slow");
+	});
+
+	$("#new-trans-dismiss-btn").click(function(){
+		$("#new-trans-wrapper").hide("slow");
+	});
 
 	var acc_id = GetURLParameter('id');
 	if(acc_id!=undefined){

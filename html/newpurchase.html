@@ -9,34 +9,62 @@
 	<script type="text/javascript" src="Format.js"></script>
 	<script type="text/javascript" src="newpurchase.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
+	<link rel="stylesheet" type="text/css" href="newpurchase.css">
 </head>
 <body>
-	<div id="newPurSumDiv">
-		<select id="newPurAccSel"></select>
-		<label>Net Payable:<input id="newPayableInput" type="number" value="0" readonly/></label>
-		<label>Purchase Details:<input id="purchaseDetailsInput" type="text" placeholder="" /></label>
-		<input id="newPurFinBtn" type="button" value="Finish"/>
+<div id="wrapper">
+	<div id="header">
+		<div id="logo"></div>
+		<h1 id="heading">Niagra Sports Management System</h1>
 	</div>
-	<div id="purItemDiv">
-		<table id="purItemTab">
-			<tr>
-				<th>No.</th>
-				<th>ITEM NAME</th>
-				<th>PRICE</th>
-				<th>QUANTITY</th>
-				<th>AMOUNT</th>
-				<th>REMOVE</th>
-			</tr>
-			<tr>
-				<td class="item-index">1</td>
-				<td><input class="item-name" type="text" list="itemList"/></td>
-				<td><input class="item-price" type="number" min="0"/></td>
-				<td><input class="item-quantity" type="number" min="0"/></td>
-				<td class="item-amount"></td>
-				<td><input class="remove-item" type="button" value="Remove" disabled/></td>
-			</tr>
-		</table>
+	<div id="content">
+		<div id="newPurSumDiv">
+			<table id="newPurSumTab">
+				<tr>
+					<td>Account</td>
+					<td><select class="form-control" id="newPurAccSel"></select></td>
+				</tr>
+				<tr>
+					<td>Net Payable</td>
+					<td><input class="form-control" id="newPayableInput" type="number" value="0" readonly/></td>
+				</tr>
+				<tr>
+					<td>Details</td>
+					<td><input class="form-control" id="purchaseDetailsInput" type="text" placeholder=""/></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input class="btn btn-default" id="newPurFinBtn" type="button" value="Finish"/></td>
+				</tr>
+			</table>
+			
+		</div>
+		<div id="purItemDiv">
+			<table id="purItemTab" class="table-default">
+				<tr>
+					<th>No.</th>
+					<th>ITEM NAME</th>
+					<th>PRICE</th>
+					<th>QUANTITY</th>
+					<th>AMOUNT</th>
+					<th>REMOVE</th>
+				</tr>
+				<tr>
+					<td class="index-column">1</td>
+					<td class="item-name-column"><input class="item-name-input form-control" type="text" list="itemList"/></td>
+					<td class="item-price-column"><input class="item-price-input form-control" type="number" min="0"/></td>
+					<td class="item-qty-column"><input class="item-qty-input form-control" type="number" min="0"/></td>
+					<td class="item-total-column"></td>
+					<td class="item-delete-column"><input class="remove-item table-btn" type="button" value="Remove" disabled/></td>
+				</tr>
+			</table>
+		</div>
+		<datalist id="itemList"></datalist>
 	</div>
-	<datalist id="itemList"></datalist>
+	<div id="footer">
+		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
+		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
+	</div>
+</div>
 </body>
 </html>

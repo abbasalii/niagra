@@ -9,36 +9,65 @@
 	<script type="text/javascript" src="Format.js"></script>
 	<script type="text/javascript" src="newbill.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
+	<link rel="stylesheet" type="text/css" href="newbill.css">
 </head>
 <body>
-	<div id="newBillSumDiv">
-		<select id="newBillAccSel"></select>
-		<label>Amount Due:<input id="amountDueInput" type="number" readonly/></label>
-		<label>Discount:<input id="dicountInput" type="number"/></label>
-		<label>Amount Paid:<input id="amountPaidInput" type="number"/></label>
-		<label>Payment Details:<input id="paymentDetailsInput" type="text" value="Paid in Cash" /></label>
-		<input id="newBillFinBtn" type="button" value="Finish"/>
+<div id="wrapper">
+	<div id="header">
+		<div id="logo"></div>
+		<h1 id="heading">Niagra Sports Management System</h1>
 	</div>
-	<div id="billItemDiv">
-		<table id="billItemTab">
-			<tr>
-				<th>No.</th>
-				<th>ITEM NAME</th>
-				<th>PRICE</th>
-				<th>QUANTITY</th>
-				<th>AMOUNT</th>
-				<th>REMOVE</th>
-			</tr>
-			<tr>
-				<td class="item-index">1</td>
-				<td><input class="item-name" type="text" list="itemList"/></td>
-				<td><input class="item-price" type="number" min="0"/></td>
-				<td><input class="item-quantity" type="number" min="0"/></td>
-				<td class="item-amount"></td>
-				<td><input class="remove-item" type="button" value="Remove" disabled/></td>
-			</tr>
-		</table>
+	<div id="content">
+		<div id="newBillSumDiv">
+			<table id="newBillSumTab">
+				<tr class="form-group">
+					<td>Account</td>
+					<td><select class="form-control" id="newBillAccSel"></select></td>
+				</tr>
+				<tr class="form-group">
+					<td>Amount Due</td>
+					<td><input class="form-control" id="amountDueInput" type="number" readonly/></td>
+				</tr>
+				<tr class="form-group">
+					<td>Discount</td>
+					<td><input class="form-control" id="amountPaidInput" type="number"/></td>
+				</tr>
+				<tr class="form-group">
+					<td>Payment Details</td>
+					<td><input class="form-control" id="paymentDetailsInput" type="text" value="Paid in Cash" /></td>
+				</tr>
+				<tr class="form-group">
+					<td></td>
+					<td><input id="newBillFinBtn" class="btn btn-default" type="button" value="Finish"/></td>
+				</tr>
+			</table>
+		</div>
+		<div id="billItemDiv">
+			<table id="billItemTab" class='table-default'>
+				<tr>
+					<th>No.</th>
+					<th>ITEM NAME</th>
+					<th>PRICE</th>
+					<th>QUANTITY</th>
+					<th>AMOUNT</th>
+					<th>REMOVE</th>
+				</tr>
+				<tr>
+					<td class="index-column">1</td>
+					<td class="new-bill-name-td"><input class="item-name form-control" type="text" list="itemList"/></td>
+					<td class="new-bill-price-td"><input class="item-price form-control" type="number" min="0"/></td>
+					<td class="new-bill-qty-td"><input class="item-quantity form-control" type="number" min="0"/></td>
+					<td class="item-amount"></td>
+					<td class="new-bill-remove-td"><input class="remove-item" type="button" value="Remove" disabled/></td>
+				</tr>
+			</table>
+		</div>
+		<datalist id="itemList"></datalist>
 	</div>
-	<datalist id="itemList"></datalist>
+	<div id="footer">
+		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
+		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
+	</div>
+</div>
 </body>
 </html>

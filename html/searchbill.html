@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="searchbill.js"></script>
 	<script type="text/javascript" src="Format.js"></script>
 	<link rel="stylesheet" type="text/css" href="default.css">
+	<link rel="stylesheet" type="text/css" href="searchbill.css">
 	<style type="text/css">
 		.bill-detail-btn{
 
@@ -16,23 +17,68 @@
 	</style>
 </head>
 <body>
-	<div id="billSearchDiv">
-		<div id="searchByNumber">
-			<input id="billNumInput" type="number" min="1" placeholder="Bill No."/>
-			<input id="viewBillBtn" type="button" value="View"/>
-		</div>
-		<div id="searchByFilters">
-			<select id="billCitySelect"></select>
-			<input id="searchBillBar" type="text" placeholder="Account Title" list="accList"/>
-			<input id="beginBillDate" type="date"/>
-			<input id="endBillDate" type="date"/>
-			<input id="minBillAmount" type="number" min="0" placeholder="Minimum Amount"/>
-			<input id="maxBillAmount" type="number" min="0" placeholder="Maximum Amount"/>
-			<input id="searchBillBtn" type="button" value="Search"/>
-		</div>
+<div id="wrapper">
+	<div id="header">
+		<div id="logo"></div>
+		<h1 id="heading">Niagra Sports Management System</h1>
 	</div>
-	<div id="billRecordsDiv"></div>
-	<div id="billDetailDiv"></div>
-	<datalist id="accList"></datalist>
+	<div id="content">
+		<div id="billSearchDiv">
+			<div id="searchByNumber">
+				<input id="billNumInput" type="number" min="1" placeholder="Bill No."/>
+				<input id="viewBillBtn" type="button" value="View"/>
+			</div>
+			<div id="searchByFilters">
+				<table>
+				<!-- 	<tr>
+						<td>City</td>
+						<td><select id="billCitySelect"></select></td>
+						<td>Account</td>
+						<td><input id="searchBillBar" type="text" placeholder="" list="accList"/></td>
+						<td class="search-btn-td" rowspan="3"><input id="searchBillBtn" type="button" value="Search"/></td>
+					</tr>
+					<tr>
+						<td>Start</td>
+						<td><input id="beginBillDate" type="date"/></td>
+						<td>End</td>
+						<td><input id="endBillDate" type="date"/></td>
+					</tr>
+					<tr>
+						<td>Minimum</td>
+						<td><input id="minBillAmount" type="number" min="0" placeholder=""/></td>
+						<td>Maximum</td>
+						<td><input id="maxBillAmount" type="number" min="0" placeholder=""/></td>
+					</tr> -->
+					<tr>
+	                        <td>City</td>
+	                        <td><select id="billCitySelect"></select></td>
+	                        <td>Account</td>
+	                        <td><input id="searchBillBar" type="text" placeholder="" list="accList"/></td>
+	                        <td class="search-btn-td" rowspan="3"><input id="searchBillBtn" type="button" value="Search"/></td>
+	                </tr>
+	                <tr>
+	                        <td>Start</td>
+	                        <td><input id="beginBillDate" type="date"/></td>
+	                        <td>End</td>
+	                        <td><input id="endBillDate" type="date"/></td>
+	                </tr>
+	                <tr>
+	                        <td>Minimum</td>
+	                        <td><input id="minBillAmount" type="number" min="0" placeholder=""/></td>
+	                        <td>Maximum</td>
+	                        <td><input id="maxBillAmount" type="number" min="0" placeholder=""/></td>
+	                </tr>
+				</table>
+			</div>
+		</div>
+		<div id="billRecordsDiv"></div>
+		<div id="billDetailDiv"></div>
+		<datalist id="accList"></datalist>
+	</div>
+	<div id="footer">
+		<p id="copyright">&copy Niagra Sports. All rights reserved.</p>
+		<p id="developed-by">Developed by <a href="https://www.facebook.com/codistanpk" target="_blank">Codistan</a></p>
+	</div>
+</div>
 </body>
 </html>

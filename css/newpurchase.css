@@ -1,0 +1,19 @@
+.item-name-column{
+	width: 264px;
+	text-align: center;
+}
+
+.item-price-column{
+	width: 135px;
+	text-align: center;
+}
+
+.item-qty-column{
+	width: 135px;
+	text-align: center;
+}
+
+.item-delete-column{
+	width: 96px;
+	text-align: center;
+}

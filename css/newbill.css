@@ -1,0 +1,40 @@
+.new-bill-price-td{
+	width: 100px;
+}
+
+.item-price{
+	width: 90px;
+	text-align: right;
+}
+
+.new-bill-qty-td{
+	width: 96px;
+}
+
+.item-quantity{
+	width: 86px;
+	text-align: right;
+}
+
+.item-amount{
+	width: 96px;
+	text-align: right;
+}
+
+.new-bill-remove-td{
+	text-align: center;
+}
+
+.remove-item{
+	background-color: rgba(0,0,0,0);
+	border: none;
+}
+
+.remove-item:hover:enabled{
+	cursor: pointer;
+}
+
+.new-bill-name-td{
+	width: 234px;
+	text-align: center;
+}

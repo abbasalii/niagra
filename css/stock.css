@@ -62,11 +62,11 @@
 
 #stock-content-wrapper{
 	width: 1015px;
-	height: 500px;
+	/*height: 500px;*/
 	position: relative;
 	left: 50%;
 	margin-left: -405px;
-
+	overflow: auto;
 }
 
 #showNewStockBtn{
